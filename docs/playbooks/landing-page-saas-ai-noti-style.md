@@ -81,6 +81,37 @@ The cheapest moves first. If you only adopt the top 5, you already cover
     with a sticky table of contents on the right rail (or top, on mobile).
     Tabs hide content and break linking; anchors don't.
 
+## Listing pages need a *compact* PageHead, not a hero
+
+Home / hero pages get the full ~88vh hero treatment. **Listing pages**
+(blog index, product catalog, "all skills") must NOT clone that hero —
+they need the first product card visible above the fold or the catalog
+fails its job.
+
+| Surface | Block padding | H1 size | Goal |
+|---------|---------------|---------|------|
+| Home hero | `3.5-5rem` + `min-height: 88vh` | `clamp(2.5rem, 5.6vw, 4.25rem)` weight 800 | Fill first viewport with a story. |
+| Listing PageHead | `2.5-3rem` block padding, no min-height | `clamp(1.875rem, 3.6vw, 2.625rem)` weight 800 | ~150-180px tall so the first card peeks at the bottom of the viewport. |
+
+Pattern for a reusable listing-page header (Astro / JSX-ish shape):
+
+```jsx
+<section class="page-head">
+  <div class="page-head-blob" aria-hidden="true" />
+  <div class="container container--wide page-head-inner">
+    {badge && <span class="badge">{badge}</span>}
+    <h1 class="page-head-title"><slot /></h1>
+    {lead && <p class="page-head-lead">{lead}</p>}
+    <slot name="extras" />  {/* filter chips, segmented control, etc. */}
+  </div>
+</section>
+```
+
+**Common mistake**: re-using the home hero's `<section class="hero">`
+shell on every page. A 4-5rem block of padding plus a 3.5rem H1 plus a
+lead paragraph pushes ~280-320px above any content, hiding the first
+catalog card.
+
 ## Product / skill detail page additions
 
 For pages that sell one specific item (course, skill pack, AI agent), add:
@@ -152,13 +183,41 @@ radius, soft shadow on hover. Outline button: `1.5px` `--ink-200` border,
 ## Layout token sketch
 
 ```
-Container max-width:       1200px (1280px max for hero with floating tiles)
+Container max-width:       see "container width ladder" below
 Section vertical padding:  80-120px desktop, 56-72px mobile
+Page-head vertical padding:  44-56px (~3rem) — listing pages, not hero
 Card padding:              24-32px
 Card border radius:        16-20px
 Button radius:             999px (full pill) or 12px (rounded-rect) — pick
                            one and use globally
 ```
+
+### Container width ladder (measured from noti.vn 2026-05-16)
+
+A single `max-width` for the whole page reads as "blog template". noti
+uses three widths depending on the surface's job:
+
+| Surface | max-width | Why |
+|---------|-----------|-----|
+| Header, hero, footer | **1400px** | Full-bleed feel; the page logo, nav, hero art, and footer link grid all benefit from extra horizontal room. |
+| Content sections (article grids, bento, stats panels) | **1200-1320px** | Keeps line lengths readable. Cards stay legible at 3-up grids. |
+| Closing CTA strip, single-column reading, contact form | **~900px** | Centered, forces focus on the single decision. |
+
+In code, expose three modifiers off a single container class:
+
+```css
+.container { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(1rem, 3vw, 2rem); }
+.container--wide   { max-width: 1400px; }
+.container--narrow { max-width: 900px; }
+```
+
+Default = mid (1320). Apply `--wide` to Header / Hero / Footer. Apply
+`--narrow` to closing-CTA inner content and forms.
+
+**How to verify**: in DevTools, measure noti's `.header-container`,
+`.hero-container`, and `.footer-container` widths at a 1440 viewport.
+They should be ≈1400px. If your widths are 1200px or smaller, the page
+will read as visibly narrower than noti at the same viewport.
 
 ## Minimum viable page
 
@@ -207,6 +266,32 @@ Stack-agnostic, but a few rules of thumb regardless of framework:
 - Keep the footer simple. A 4-column grid that collapses to a 2-column on
   tablet and 1-column on mobile is the standard.
 
+## Above-the-fold verification (mandatory before shipping)
+
+A landing page that "looks right" in a fullPage screenshot can still be
+broken above the fold. After editing any hero or PageHead, capture a
+**viewport-only** screenshot at a representative desktop size and look
+at the first frame:
+
+- Use the recipe in `headless-browser-blank-screenshot.md` to get past
+  the blank-canvas timing issue.
+- Run with `page.screenshot({ fullPage: false })` (not the default).
+- Default viewport: `1440 × 900`. This is the most common laptop
+  resolution and the size noti.vn is tuned for.
+- Repeat for mobile (`390 × 844`).
+
+Pass criteria, page by page:
+
+| Page type | What MUST be visible in viewport 1 |
+|-----------|------------------------------------|
+| Home / hero | H1, sub-copy, both CTAs, trust strip, and the 3D-tile cluster (or whatever the hero artwork is). |
+| Listing (blog, catalog) | Page H1, lead, filters/segmented control if any, and the first content card at least partially visible. |
+| Product / skill detail | H1, sub-copy, primary CTA, and the hero proof image. |
+| Contact / about | H1, lead, and the next interactive element (form first input, or primary CTA). |
+
+If anything in that list is below the fold at 1440×900, shrink the
+header — do not push the user to scroll for the page's job.
+
 ## Anti-patterns
 
 - Constraining the entire page to `max-w-3xl` (~768px). Reads as a blog,
@@ -219,6 +304,13 @@ Stack-agnostic, but a few rules of thumb regardless of framework:
 - Tabs to hide long-form content. Use anchored sections instead.
 - Tiny CTAs (32-40px tall). On a marketing page, the CTA is the product;
   size it like one.
+- Re-using the home hero shell on listing pages. Listing pages need a
+  compact PageHead (see section above), not an 88vh hero.
+- Using a single max-width for every surface. noti uses 1400 / 1320 / 900
+  on different surfaces; matching that ladder is what makes the page feel
+  "full" instead of "boxed in".
+- Shipping based on a fullPage screenshot only. Always verify the
+  above-the-fold viewport too.
 
 ## Adapting to other audiences
 
@@ -255,3 +347,10 @@ over visual flourish.
   via the override table. Added the "full-width sections + big typography +
   big CTA" emphasis after the user pointed out that the local page felt
   cramped and the typography too small relative to noti.
+- `2026-05-16`: added **container width ladder** (1400 / 1320 / 900)
+  after measuring noti directly with playwright and finding the local
+  site's uniform 1200px was the cause of the "boxed in" feel. Added
+  **compact PageHead** pattern after listing pages were re-using the
+  home hero shell and burying the first content card below the fold.
+  Added **above-the-fold verification** section so this regression has a
+  named gate before shipping (and a `--full-page false` recipe).
