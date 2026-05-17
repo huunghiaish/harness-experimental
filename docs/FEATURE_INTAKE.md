@@ -133,7 +133,8 @@ between them**:
 1. **Phase 1 — Read + restate.** Complete `docs/spec-intake.md` from
    `docs/templates/spec-intake.md`: project summary, candidate product
    docs, candidate epics, architecture questions, validation shape,
-   first story candidates.
+   first story candidates. Use `docs/playbooks/discovery-interview-playbook.md`
+   as the canonical interview shape when the spec needs structured probing.
 2. **Stop.** Present the intake doc to the human. Do NOT start
    deriving `docs/product/*`, architecture decisions, design-direction
    decisions, or story packets yet.
