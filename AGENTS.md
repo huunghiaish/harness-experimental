@@ -76,6 +76,17 @@ For every task:
    - Did we just solve a non-obvious tooling or environment problem that is
      likely to recur on this or another project? If yes, add or update a file
      in `docs/playbooks/` using `docs/playbooks/template.md`.
+   - Did we exercise any `experimental` playbook? If yes, was it usable
+     without modification? If yes, promote its `Lifecycle:` line to
+     `verified` and fill the `First-use` field
+     (see `docs/HARNESS.md` § Playbook Lifecycle).
+   - Did any playbook we used need an unwritten workaround? If yes,
+     append a `§ Variant` section to that playbook
+     (see `docs/playbooks/README.md` § Use Order step 4).
+   - Is this the end of a multi-task session (3+ commits, or work
+     spanning multiple intake items)? If yes, run
+     `docs/playbooks/session-retrospective.md` and save the report
+     to `plans/reports/retro-<date>-<slug>.md` before reporting "done".
 10. Update routine harness files directly, or add a proposal to
     `docs/HARNESS_BACKLOG.md` when the change is structural.
 

@@ -67,6 +67,7 @@ Run in sequence — second composes on top of first.
 |------|------------------|
 | [e2e-recording-user-guide-quality.md](e2e-recording-user-guide-quality.md) | E2E recording tests PASS green but cannot serve as customer user-guide videos — API mutations bypass UI, subtitles desync from action, no F5 readback verify. |
 | [e2e-qa-field-by-field-verify-with-report.md](e2e-qa-field-by-field-verify-with-report.md) | One-shot `/goal` recipe taking a feature from "smoke spec" to "DONE 100% + tutorial-quality video + zero-incorrect verify report". Auto-spawns dev sub-agent on product bugs, loops until acceptance gate or 3-strikes escalate. |
+| [session-retrospective.md](session-retrospective.md) | Multi-task session is ending — capture cross-task insight (friction, playbook UX, lifecycle promotion candidates, backlog candidates, decisions) before session memory disappears. Triggered by AGENTS.md Task Loop step 9. |
 
 ### Tooling fix — symptom → root cause → exact recipe for a recurring bug
 
