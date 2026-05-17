@@ -43,9 +43,14 @@ For every task:
    re-deriving a fix.
 6. If the work touches UI / visual surfaces (web, mobile, desktop, any
    user-visible interface):
-   - Check `docs/design-guidelines.md` exists. If not, apply
-     `docs/playbooks/ui-design-system-contract.md` to create it before
-     writing any component code.
+   - Check `docs/design-guidelines.md` exists. If not:
+     1. First run **Style Intake** (see playbook § Style Intake): pick
+        one of the 5 sources (live URL / mockup / AI generate / interview
+        / brand assets), then save `docs/decisions/YYYY-MM-DD-design-direction.md`
+        with the resulting tokens, source, and approver.
+     2. Then apply `docs/playbooks/ui-design-system-contract.md` to
+        populate the contract file using tokens from the decision doc.
+        The contract's §1 must open with a link to the decision doc.
    - Check the §3 Component Coverage Matrix covers every component the
      work will touch. If a needed component is missing, add the row (stub
      or implement) before building the screen.

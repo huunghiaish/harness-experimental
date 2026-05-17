@@ -90,6 +90,10 @@ change. Open with this table:
 ### Section skeleton
 
 1. **Foundation Files** — list of token / primitive / layout files with paths.
+   **Open the contract file with a one-line link to the design-direction
+   decision doc** (see § Style Intake below): "Style direction decided
+   via `<method>`, see [`docs/decisions/YYYY-MM-DD-design-direction.md`]".
+   Without that link, future sessions don't know where the tokens came from.
 2. **Token Cheat-Sheet** — quick reference, code is canonical.
 3. **Component Coverage Matrix** — copy the matrix from this playbook
    verbatim. Tick rows as components ship; leave stubs (`TODO`) visible
@@ -113,6 +117,70 @@ change. Open with this table:
     not generic ("don't use `rgba(0,0,0,...)`, shadows are brand-tinted").
 12. **Verification** — link to visual-diff script, structural lint, and
     coverage lint that prove the contract is met.
+
+## Style Intake — Where the values come from
+
+This playbook defines **structure**. The concrete style values (brand
+color, typography, vibe, density) are project-specific decisions humans
+must make before any contract file gets populated. Skip this step and
+the agent will either invent values (drift across sessions) or
+interview the user from scratch every time (slow, repetitive).
+
+### 5 valid sources
+
+Pick the one matching what the project already has:
+
+| Source | When to use | Skill / tool | Output |
+|---|---|---|---|
+| **Live reference URL** | User: "make it look like X" (X is a real shipping site) | `/ck:ck-extract-design-system` | Tokens + screenshots + CSS vars, reverse-engineered from live DOM |
+| **Mockup / screenshot** | User has a Figma export, wireframe, or screenshot | `/ck:ai-multimodal` (Gemini vision) + `/ck:frontend-design` | Tokens extracted from image, then replicated in code |
+| **AI design generation** | Brief only, no reference | `/ck:stitch` | Fresh DESIGN.md + Tailwind config from text prompt |
+| **Interview from library** | "I want modern SaaS feel" / "professional fintech" | `/ck:ui-ux-pro-max` | Pick from 161 palettes + 57 font pairings + 50+ styles |
+| **Existing brand assets** | Project has logo + brand book already | `/ck:ai-multimodal` (extract palette) + `/ck:design` (apply system) | Tokens derived from brand identity |
+
+### Required: persist the decision
+
+Once style is captured, write `docs/decisions/YYYY-MM-DD-design-direction.md`:
+
+```markdown
+# Design Direction
+- Source: <URL | mockup file path | brief text | brand-book.pdf>
+- Method: <which of the 5 above>
+- Approved by: <human name>
+- Date: 2026-MM-DD
+
+## Resulting tokens
+- Brand primary: #0d9488 (teal-600)
+- Brand secondary: #2dd4bf
+- Font: Inter (300-800)
+- Radius scale: 8 / 12 / 16 / 20 / 24 / 50
+- Shadow tint: rgba(13, 148, 136, α) — brand-tinted, not grey
+- (etc. — one line per token group)
+
+## Why this direction
+1-3 sentences on rationale.
+
+## Reference attachments
+- screenshot-1.png (cached from URL or upload)
+- ...
+```
+
+Future sessions read this decision doc instead of re-interviewing the
+user. The contract file's §1 Foundation Files MUST open with a link to
+this decision doc — that link is the bridge between "why" (decision) and
+"what" (contract).
+
+### Anti-patterns
+
+- Skipping intake and asking the agent to "pick reasonable colors" —
+  produces ad-hoc tokens that drift across sessions and projects.
+- Treating intake as an interview every session — write the decision
+  once, link it from the contract file, agents read the link.
+- Intake without persistence — six months later nobody remembers why
+  teal was chosen, or whether it was approved.
+- Multiple decision docs without a superseding chain — if direction
+  changes, mark the old one as superseded and link to the new one.
+  Never silently delete.
 
 ## Token taxonomy (the seven groups)
 
@@ -479,3 +547,12 @@ plus the visible §3 ↔ §6 gap is what keeps growth disciplined.
   variant-naming convention (`button-primary-hover`) from DESIGN.md. See
   `plans/reports/xia-compare-260517-0954-design-system-references.md` for
   the compare report this amendment is based on.
+- `2026-05-17` (same day, amendment 2): added § **Style Intake** section
+  (5 valid sources + required decision-doc persistence) to close the
+  "where do style values come from" gap. Playbook was previously
+  structural-only — told agents *what* to define but not *where to get
+  the values*. Each source maps to an existing skill (ck-extract-design-system
+  / ai-multimodal / stitch / ui-ux-pro-max / design). §1 Foundation
+  Files now requires the contract file to open with a link to
+  `docs/decisions/YYYY-MM-DD-design-direction.md`. Paired with AGENTS.md
+  Task Loop step 6 update so intake runs before contract population.
