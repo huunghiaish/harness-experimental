@@ -95,15 +95,23 @@ Two sub-steps. 3.A surfaces what the client said; 3.B structures what it means.
 
 ### 5. Spec + Design intake
 
-**Purpose:** derive harness artifacts from the signed spec.
+**Purpose:** derive harness artifacts from the aggregate "spec".
+
+**Important:** there is no special `SPEC.md` file. The "spec" feeding this stage is the **aggregate** of:
+
+- All raw input artifacts under `docs/discovery/` (client-provided spec, brainstorm notes, meeting transcripts, mockups, sample data) — see `docs/decisions/0009-discovery-input-folder-convention.md`.
+- Vendor-produced intake artifacts under `docs/intake/` (intake-brief from stage 2, discovery-summary from stage 3.A, gap-analysis from stage 3.B if applicable).
+- The signed SOW (`proposal-sow.md`) from stage 4.
 
 **Hook:** Spec Approval Gate (`docs/FEATURE_INTAKE.md` § Spec Approval Gate). Phase 1 read+restate → human approves → Phase 2 derive.
 
+**Output of Phase 1:** `docs/intake/YYYY-MM-DD-spec-intake.md` using `docs/templates/spec-intake.md`. Phase 2 then derives `docs/product/*`, `docs/design-guidelines.md`, and the decisions below.
+
 **UI projects also:** Style Intake (5 sources) per `ui-design-system-contract.md` → `docs/decisions/YYYY-MM-DD-design-direction.md` → `docs/design-guidelines.md`.
 
-**High-risk also:** `docs/decisions/NNNN-stack-selection.md` per `docs/ARCHITECTURE.md` § Discovery Before Shape.
+**High-risk also:** `docs/decisions/NNNN-stack-selection.md` per `docs/ARCHITECTURE.md` § Discovery Before Shape. Use `docs/templates/decisions/stack-selection.md` as the question-shape.
 
-**Reads:** SOW + gap analysis + raw inputs. **Writes:** `docs/product/*`, `docs/design-guidelines.md`, decisions.
+**Reads:** `docs/discovery/*`, `docs/intake/*`, SOW. **Writes:** `docs/intake/YYYY-MM-DD-spec-intake.md`, then on Phase 2 approval → `docs/product/*`, `docs/design-guidelines.md`, decisions.
 
 ### 6. Visual & Behavioral Modeling
 

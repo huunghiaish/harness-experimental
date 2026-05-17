@@ -130,9 +130,24 @@ Hard gates:
 A new spec is the highest-leverage input — misinterpretation propagates
 across every story, decision, and component that follows. For the
 **New Spec** input type only, intake is **two phases with a human gate
-between them**:
+between them**.
 
-1. **Phase 1 — Read + restate.** Complete `docs/spec-intake.md` from
+**What "the spec" means here:** there is no single `SPEC.md` file. The
+spec is the **aggregate** of:
+
+- All raw input artifacts under `docs/discovery/` (client-provided spec
+  PDF/markdown, brainstorm notes the vendor wrote with ChatGPT/Claude,
+  meeting transcripts, mockup screenshots, sample data exports). See
+  `docs/decisions/0009-discovery-input-folder-convention.md`.
+- Any vendor-produced intake artifacts already under `docs/intake/`
+  (intake-brief from stage 2, discovery-summary from stage 3.A,
+  gap-analysis from stage 3.B if applicable).
+- The signed SOW from stage 4 (paid client work only).
+
+The agent reads all of the above as Phase 1 input.
+
+1. **Phase 1 — Read + restate.** Save the output as
+   `docs/intake/YYYY-MM-DD-spec-intake.md` using
    `docs/templates/spec-intake.md`: project summary, candidate product
    docs, candidate epics, architecture questions, validation shape,
    first story candidates. Use `docs/playbooks/discovery-interview-playbook.md`
@@ -142,8 +157,9 @@ between them**:
    decisions, or story packets yet.
 3. **Phase 2 — Derive.** Only after human approves the intake (any of:
    "approved", "looks good", "proceed", or specific corrections then
-   approval), proceed to derive product docs, architecture decision,
-   design-direction decision, and first story packets.
+   approval), proceed to derive product docs, architecture decision
+   (use `docs/templates/decisions/stack-selection.md` for the stack
+   decision), design-direction decision, and first story packets.
 
 Other input types (spec slice, change request, maintenance, etc.) skip
 this gate — they're bounded enough to proceed straight to lane work.

@@ -66,10 +66,16 @@ Implementation prompts do not go straight to code. They first pass through
 feature intake, become story-sized work when needed, and then carry both
 product validation and harness maintenance expectations.
 
-## Greenfield Bootstrap (from a SPEC.md)
+## Greenfield Bootstrap (from raw inputs)
 
-For a brand-new project starting from a written specification, four
-commands take you from empty folder to ready-for-intake:
+For a brand-new project, four commands take you from empty folder to
+ready-for-intake. Raw inputs (client-provided spec, brainstorm notes
+written with ChatGPT/Claude, meeting transcripts, mockup screenshots,
+sample data) all land under `docs/discovery/` per
+`docs/decisions/0009-discovery-input-folder-convention.md`. There is no
+special `SPEC.md` at repo root — the "spec" is the aggregate of
+discovery inputs plus the vendor-produced intake artifacts under
+`docs/intake/`.
 
 ```bash
 # 1. Empty folder for the new project
@@ -78,31 +84,39 @@ mkdir my-new-project && cd my-new-project
 # 2. Install harness into it (one-liner — see "Install Harness Into A Project" below for options)
 curl -fsSL "https://raw.githubusercontent.com/huunghiaish/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
 
-# 3. Place the spec at the canonical greenfield location
-cp /path/to/your-spec.md ./SPEC.md
+# 3. Drop ALL raw input artifacts into docs/discovery/ (one file per artifact, date-prefixed)
+mkdir -p docs/discovery
+cp /path/to/your-spec.md           docs/discovery/$(date +%Y-%m-%d)-initial-spec.md
+# cp /path/to/brainstorm-notes.md  docs/discovery/$(date +%Y-%m-%d)-brainstorm-notes.md
+# cp /path/to/mockup.png           docs/discovery/$(date +%Y-%m-%d)-checkout-mockup.png
+# ... repeat for every artifact you have
 
 # 4. Initialize the project's own git history
-git init && git add -A && git commit -m "chore: bootstrap from harness + add SPEC"
+git init && git add -A && git commit -m "chore: bootstrap from harness + add discovery inputs"
 ```
 
 Then open Claude Code (or any agent that reads `AGENTS.md`) and prompt:
 
-> Read SPEC.md. Run Phase 1 Spec Intake per docs/FEATURE_INTAKE.md.
-> Create docs/spec-intake.md. Stop after intake for human review.
+> Read all files under `docs/discovery/`. Run Phase 1 Spec Intake per
+> `docs/FEATURE_INTAKE.md` § Spec Approval Gate. Create
+> `docs/intake/YYYY-MM-DD-spec-intake.md`. Stop after intake for human review.
 
 Approve the intake (see `docs/FEATURE_INTAKE.md` § Spec Approval Gate).
 Only then does the agent derive `docs/product/*`, architecture
 decisions, design-direction decisions, and first story packets. From
 there, the agent follows the full Task Loop in `AGENTS.md` per story.
 
+The single-command equivalent (planned `--bootstrap` flag — see
+`docs/HARNESS_BACKLOG.md` entry) bundles steps 1+2+3+4 into one
+invocation.
+
 **Why curl install over `git clone`**: the installer copies only the
 harness skeleton (AGENTS.md + docs/ + scripts/), not this repo's git
 history, plans/, or in-progress work. Cleaner starting point.
 
 If `curl` is not available or you want full file visibility before
-running, use the manual fallback: clone, delete `.git`, re-init, copy
-SPEC.md, commit. The harness backlog tracks a planned `--bootstrap`
-flag that bundles steps 1+2+4 into one command.
+running, use the manual fallback: clone, delete `.git`, re-init, drop
+inputs into `docs/discovery/`, commit.
 
 ## Install Harness Into A Project
 
