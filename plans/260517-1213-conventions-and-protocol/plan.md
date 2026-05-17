@@ -1,6 +1,8 @@
 # Plan A — Conventions + Protocol
 
-**Date:** 2026-05-17 · **Branch:** main · **Status:** Ready for execution
+**Date:** 2026-05-17 · **Branch:** main · **Status:** completed 2026-05-17
+
+**Plan status:** completed 2026-05-17. Shipped via commit `661df0f` (traceability tokens + 3 portable playbooks). Lifecycle annotations followed in `4914570`.
 
 ## Goal
 
