@@ -372,7 +372,9 @@ docs/decisions/0005-roadmap-execution-direction.md
 docs/decisions/0006-session-retrospective-mechanic.md
 docs/decisions/0007-solo-dev-client-delivery-templates.md
 docs/decisions/0008-visual-behavioral-modeling-stage.md
+docs/decisions/0009-discovery-input-folder-convention.md
 docs/decisions/README.md
+docs/discovery/README.md
 docs/playbooks/README.md
 docs/playbooks/template.md
 docs/playbooks/PATCH-EXTENSION-PROTOCOL.md

@@ -184,8 +184,11 @@ agents file by topic when topic clusters emerge.
 
 ### Demand Evidence
 
-None — waiting for promotion trigger (2 distinct projects asking for a
-standard naming scheme, or 1 project hit 3+ times).
+- 2026-05-17 — Solo-dev VN e-commerce project hit the gap immediately:
+  user dropped source doc at repo root → agent mis-filed to
+  `plans/reports/` → user redirected with explicit requirement "folder
+  for inputs like SPEC.md but for many artifacts (meeting notes,
+  screenshots, change request raw)". Single-session 2 hits.
 
 ### Risk
 
@@ -193,7 +196,7 @@ Tiny.
 
 ### Status
 
-proposed
+accepted (implemented 2026-05-17 — see `docs/decisions/0009-discovery-input-folder-convention.md` and `docs/discovery/README.md`)
 
 ## Missing Harness Capability
 
