@@ -17,13 +17,14 @@ Skip when:
 
 ## The Flow
 
-Twelve stages. Each stage points to ONE primary artifact and 0-2 supporting playbooks.
+Thirteen stages. Each stage points to ONE primary artifact and 0-2 supporting playbooks.
 
 ```text
 [1. Lead] → [2. Intake brief] → [3. Discovery] → [4. Proposal/SOW] →
-[5. Spec intake + Design intake] → [6. Story slicing] → [7. Build]
-  → [8. Code review] → [9. QA + scenarios] → [10. UAT + signoff]
-  → [11. Release + client update] → [12. Handover + maintenance]
+[5. Spec intake + Design intake] → [6. Visual & Behavioral Modeling] →
+[7. Story slicing] → [8. Build] → [9. Code review] → [10. QA + scenarios]
+  → [11. UAT + signoff] → [12. Release + client update]
+  → [13. Handover + maintenance]
 ```
 
 ### 1. Lead
@@ -65,15 +66,28 @@ After signing, derive harness artifacts from the spec.
 - **UI projects also run:** `docs/playbooks/ui-design-system-contract.md` § Style Intake (5 sources). Produce `docs/decisions/YYYY-MM-DD-design-direction.md` then `docs/design-guidelines.md`.
 - **High-risk projects also write:** `docs/decisions/NNNN-stack-selection.md` (per `docs/ARCHITECTURE.md` § Discovery Before Shape).
 
-### 6. Story slicing
+### 6. Visual & Behavioral Modeling
+
+Build the visual + behavioral contract BEFORE slicing stories. Triple-use: client review surface, AI code-generation handoff target, UAT pass criterion.
+
+- **Artifact:** `docs/playbooks/visual-and-behavioral-modeling.md` (3 sub-steps).
+  - **A. Design system check** — confirm `docs/design-guidelines.md` from stage 5 covers prototype components.
+  - **B. Interactive prototype** — generate with Claude Design (https://claude.ai/design) → fallback ladder: `/stitch` skill → Claude Artifacts → v0.dev → pencil.dev/penpot. Output under `docs/visuals/prototype/`.
+  - **C. Business diagrams** — Sitemap, User Flow per journey, Business Workflow, ERD draft, Role-Permission Matrix, Status Flow (per stateful entity). Outputs under `docs/visuals/diagrams/`.
+- **Templates:** `docs/templates/role-permission-matrix.md` and `docs/templates/status-flow.md` (`locale-vi/` forks for client-facing).
+- **Gate:** prototype + all diagrams frozen before stage 7. Client confirms prototype in writing.
+- **Per-tier:** tiny = skip whole stage; normal = sub-step A + sitemap + 1 user flow + 1 prototype screen per client-visible surface; high-risk = all sub-steps + RPM + Status Flow per stateful entity.
+
+### 7. Story slicing
 
 Cut product surface into story-sized work.
 
 - **Artifact:** `docs/stories/epics/EXX-name/US-NNN-name.md` (from `docs/templates/story.md`). High-risk lane uses `docs/templates/high-risk-story/`.
 - **Tokens:** every REQ becomes `US-NNN.REQ-MMM`. Every test scenario becomes `US-NNN.SC-MMM`.
 - **Scenario decomposition:** for each REQ, run `docs/playbooks/scenario-taxonomy-playbook.md` (12 dimensions).
+- **Inputs from stage 6:** RPM grid cells citing REQ tokens become acceptance criteria; status-flow transitions become SC scenarios.
 
-### 7. Build
+### 8. Build
 
 Execute the story. Honour the story's § Implementation Guardrails section.
 
@@ -81,14 +95,14 @@ Execute the story. Honour the story's § Implementation Guardrails section.
 - **Discipline:** don't change architecture without a new decision doc. Don't delete code without justification. Handle loading / error / empty states for any UI surface. Explain what changed in the commit body.
 - **Rule:** every commit cites at least one `US-NNN.REQ-MMM` or `US-NNN.SC-MMM` token in the message.
 
-### 8. Code review
+### 9. Code review
 
 Per-tier rubric.
 
 - **Artifact:** `docs/playbooks/code-review-scoring.md` (6-dim, pass threshold ≥ 7, any 0 auto-blocks).
 - **Application:** tiny = optional, normal = 1 reviewer, high-risk = 2 reviewers.
 
-### 9. QA + scenarios
+### 10. QA + scenarios
 
 Prove the story behaves.
 
@@ -96,7 +110,7 @@ Prove the story behaves.
 - **Bug-for-tutorial flow:** `docs/playbooks/e2e-qa-field-by-field-verify-with-report.md` when the same artifact must also serve as a user-guide demo.
 - **Rule:** every `REQ` cited in a story must trace to at least one `TC` row in TEST_MATRIX before UAT.
 
-### 10. UAT + signoff
+### 11. UAT + signoff
 
 Client-facing acceptance gate. This is where harness rigor meets commercial reality.
 
@@ -106,8 +120,9 @@ Client-facing acceptance gate. This is where harness rigor meets commercial real
   - `docs/templates/delivery-closure-story/02-signoff.md` — REQ coverage + exclusions + conditions.
   - `docs/templates/delivery-closure-story/03-client-update.md` — message sent to the client.
 - **Gate:** REQ coverage complete (every `US-NNN.REQ-MMM` either passed or explicitly excluded with a decision link).
+- **Visual gate:** "live product matches frozen prototype from stage 6" is an explicit pass criterion. Drift documented in change-request log if accepted, or in the bug list if rejected.
 
-### 11. Release + client update
+### 12. Release + client update
 
 Production deploy + structured client communication.
 
@@ -115,7 +130,7 @@ Production deploy + structured client communication.
 - **Sub-checklists in the template:** § 7 pre-deploy checklist, § 8 post-deploy smoke, § 9 rollback plan, § 11 client-update message.
 - **Rule:** every released REQ token appears in the release note. Every deferred REQ links to a follow-up story or backlog row.
 
-### 12. Handover + maintenance
+### 13. Handover + maintenance
 
 End-of-project ownership change + recurring revenue offer.
 
@@ -124,6 +139,7 @@ End-of-project ownership change + recurring revenue offer.
   - `docs/templates/project-closure-story/01-handover-docs.md` — index of read-this-order.
   - `docs/templates/project-closure-story/02-credentials-handover.md` — vault-pointer credentials checklist (no raw secrets).
   - `docs/templates/project-closure-story/03-knowledge-transfer.md` — sessions log.
+- **Stage-6 artifacts also ship** as part of handover: `docs/visuals/prototype/` URL + screen exports, `docs/visuals/diagrams/*`, frozen RPM, frozen status flows.
 - **Then:** send `docs/templates/maintenance-proposal.md` (`locale-vi/` fork). Defines SLA, tiers, and post-warranty support process.
 
 ## Always-On: Change Request
@@ -143,14 +159,14 @@ Independent of stage. Any client request that lands after SOW signing enters the
 
 ## Decision Matrix — Which Templates Apply
 
-| Project type | Intake brief | SOW | Spec intake | Design intake | High-risk story | Maintenance |
-| --- | --- | --- | --- | --- | --- | --- |
-| Landing page (Low) | yes | yes | optional | yes | no | optional |
-| Web app / SaaS (Medium) | yes | yes | yes | yes | optional | yes |
-| Internal tool / automation (Medium) | yes | yes | yes | optional | optional | yes |
-| AI app (Medium) | yes | yes | yes | optional | yes (if user-data) | yes |
-| E-commerce / Dashboard (High) | yes | yes | yes | yes | yes | yes |
-| Mobile (Medium-High) | yes | yes | yes | yes | optional | yes |
+| Project type | Intake brief | SOW | Spec intake | Design intake | Visual modeling | High-risk story | Maintenance |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Landing page (Low) | yes | yes | optional | yes | partial (prototype + sitemap) | no | optional |
+| Web app / SaaS (Medium) | yes | yes | yes | yes | yes (RPM if multi-role) | optional | yes |
+| Internal tool / automation (Medium) | yes | yes | yes | optional | yes (RPM + status flow) | optional | yes |
+| AI app (Medium) | yes | yes | yes | optional | partial (prototype + flows) | yes (if user-data) | yes |
+| E-commerce / Dashboard (High) | yes | yes | yes | yes | yes (all sub-steps) | yes | yes |
+| Mobile (Medium-High) | yes | yes | yes | yes | yes (all sub-steps) | optional | yes |
 
 ## When This Playbook Conflicts With The Harness
 
@@ -160,6 +176,7 @@ The harness wins. This playbook is a *commercial wrapper around* the harness —
 - Cannot skip stack-selection decision (`docs/ARCHITECTURE.md` § Discovery Before Shape) before the first implementation story.
 - Cannot skip `docs/playbooks/code-review-scoring.md` for normal/high-risk lanes even when the client is "fine without review".
 - Cannot replace `docs/TEST_MATRIX.md` with "UAT will catch it" — UAT TCs cite matrix rows; the matrix is the source of truth.
+- Cannot regenerate the stage-6 prototype post-freeze to "match the code" — drift goes through `change-request-log.md` and a documented decision, not a silent re-render.
 
 ## Variant Section
 
@@ -170,11 +187,14 @@ The harness wins. This playbook is a *commercial wrapper around* the harness —
 - `docs/playbooks/playbook-composition-pattern.md` — composition rules this playbook honors.
 - `docs/playbooks/bilingual-delivery-template-pattern.md` — locale fork pattern used by the client-facing artifacts above.
 - `docs/playbooks/discovery-interview-playbook.md` — stage 3.
-- `docs/playbooks/scenario-taxonomy-playbook.md` — stage 6.
-- `docs/playbooks/canonical-e2e-flow-playbook.md` — stage 9.
-- `docs/playbooks/code-review-scoring.md` — stage 8.
 - `docs/playbooks/ui-design-system-contract.md` — stage 5 (UI projects).
+- `docs/playbooks/visual-and-behavioral-modeling.md` — stage 6.
+- `docs/playbooks/scenario-taxonomy-playbook.md` — stage 7.
+- `docs/playbooks/code-review-scoring.md` — stage 9.
+- `docs/playbooks/canonical-e2e-flow-playbook.md` — stage 10.
 - `docs/playbooks/session-retrospective.md` — end-of-session capture.
-- `docs/templates/proposal-sow.md`, `client-intake-brief.md`, `maintenance-proposal.md`, `release-note.md`, `change-request-log.md` — new commercial templates this playbook chains.
+- `docs/templates/proposal-sow.md`, `client-intake-brief.md`, `maintenance-proposal.md`, `release-note.md`, `change-request-log.md` — commercial templates this playbook chains.
+- `docs/templates/role-permission-matrix.md`, `status-flow.md` — stage-6 templates.
 - `docs/templates/delivery-closure-story/`, `project-closure-story/` — closure templates this playbook chains.
-- `docs/decisions/0007-solo-dev-client-delivery-templates.md` — adoption decision.
+- `docs/decisions/0007-solo-dev-client-delivery-templates.md` — original commercial-wrapper decision.
+- `docs/decisions/0008-visual-behavioral-modeling-stage.md` — stage-6 insertion decision.

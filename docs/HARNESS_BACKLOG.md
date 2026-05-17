@@ -435,3 +435,65 @@ mandate.
 
 accepted (implemented 2026-05-17 — see `docs/decisions/0007-solo-dev-client-delivery-templates.md`)
 
+## Missing Harness Capability
+
+### Title
+
+Visual & behavioral modeling stage for solo-dev client delivery
+
+### Discovered While
+
+Same-day follow-up to commit 22c0529 (decision 0007). Real solo-dev VN
+e-commerce / dashboard project (2026-05-17) surfaced the structural gap
+between stage 5 (Spec + Design intake) and stage 6 (Story slicing): there
+was no explicit phase for producing the visual + behavioral artifacts
+that anchor non-tech client review, AI code-generation handoff, and UAT
+pass criteria.
+
+### Current Pain
+
+Without a dedicated stage:
+- Client gives cosmetic feedback on a clickable demo only at UAT — late
+  and expensive.
+- AI code generation drifts because it has no visual contract.
+- Permission and state-machine bugs surface in production audit logs
+  instead of in design-time matrix / status-flow tables.
+- Scope disputes at UAT escalate because "what we agreed to build" lives
+  only in prose.
+
+Existing `ui-design-system-contract.md` covers design tokens but not
+interactive prototypes. No template for Role-Permission Matrix or
+Status Flow — two of the highest-leverage behavioral artifacts.
+
+### Suggested Improvement
+
+Insert new stage 6 "Visual & Behavioral Modeling" into the meta-playbook
+(renumber 6-12 → 7-13). Ship:
+- `docs/playbooks/visual-and-behavioral-modeling.md` (3 sub-steps).
+- `docs/templates/role-permission-matrix.md` + locale-vi fork.
+- `docs/templates/status-flow.md` + locale-vi fork.
+- Decision 0008.
+- Index updates + install heredoc sync.
+
+Tool ladder: Claude Design (https://claude.ai/design) primary, with
+Stitch / Artifacts / v0.dev / pencil.dev / hand-write fallbacks. Output
+folder `docs/visuals/`.
+
+### Demand Evidence
+
+- 2026-05-17 — user surfaced gap based on prior client-work pain.
+- 2026-05-17 — same VN e-commerce project cited in decision 0007 will
+  exercise this stage in next 4-6 weeks. Same-project second-hit on the
+  commercial-wrapper area within hours of 0007 implementation.
+
+### Risk
+
+Normal — 5 new files + meta-playbook edit + heredoc sync + decision.
+Mitigated by: playbook composes existing pieces (no duplication);
+templates are shape-only; tool ladder avoids hard dependency on
+Claude Design availability.
+
+### Status
+
+accepted (implemented 2026-05-17 — see `docs/decisions/0008-visual-behavioral-modeling-stage.md`)
+

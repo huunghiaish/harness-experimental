@@ -371,6 +371,7 @@ docs/decisions/0004-adopt-claudekit-custom-patterns.md
 docs/decisions/0005-roadmap-execution-direction.md
 docs/decisions/0006-session-retrospective-mechanic.md
 docs/decisions/0007-solo-dev-client-delivery-templates.md
+docs/decisions/0008-visual-behavioral-modeling-stage.md
 docs/decisions/README.md
 docs/playbooks/README.md
 docs/playbooks/template.md
@@ -390,6 +391,7 @@ docs/playbooks/seed-data-pattern.md
 docs/playbooks/session-retrospective.md
 docs/playbooks/solo-dev-client-delivery.md
 docs/playbooks/ui-design-system-contract.md
+docs/playbooks/visual-and-behavioral-modeling.md
 docs/product/README.md
 docs/stories/README.md
 docs/stories/backlog.md
@@ -405,6 +407,8 @@ docs/templates/client-intake-brief.md
 docs/templates/maintenance-proposal.md
 docs/templates/proposal-sow.md
 docs/templates/release-note.md
+docs/templates/role-permission-matrix.md
+docs/templates/status-flow.md
 docs/templates/high-risk-story/design.md
 docs/templates/high-risk-story/execplan.md
 docs/templates/high-risk-story/overview.md
@@ -422,6 +426,8 @@ docs/templates/locale-vi/proposal-sow.md
 docs/templates/locale-vi/change-request-log.md
 docs/templates/locale-vi/release-note.md
 docs/templates/locale-vi/maintenance-proposal.md
+docs/templates/locale-vi/role-permission-matrix.md
+docs/templates/locale-vi/status-flow.md
 docs/templates/locale-vi/delivery-closure-story/01-uat-plan.md
 docs/templates/locale-vi/delivery-closure-story/02-signoff.md
 docs/templates/locale-vi/delivery-closure-story/03-client-update.md

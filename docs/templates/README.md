@@ -14,6 +14,15 @@ Reusable scaffolds for the artifacts the harness expects. Copy or stub into the 
 | [decision.md](decision.md) | Architectural / contract decisions | Numbered `docs/decisions/NNNN-*.md`. |
 | [validation-report.md](validation-report.md) | After validation | Evidence + proof status for a story. |
 
+### Visual & behavioral modeling templates — used at stage 6 of solo-dev-client-delivery
+
+Composed by `docs/playbooks/visual-and-behavioral-modeling.md`. Both have `locale-vi/` forks (client-facing during prototype review and UAT).
+
+| File | Stage | Notes |
+| --- | --- | --- |
+| [role-permission-matrix.md](role-permission-matrix.md) | Stage 6 sub-step C.5 | Roles × resources × CRUD grid. Conditional cells, REQ token citations, audit + authentication rules. Coverage check before freeze. |
+| [status-flow.md](status-flow.md) | Stage 6 sub-step C.6 (per stateful entity) | Mermaid stateDiagram-v2 + transition table with role / pre-condition / side-effect / token columns. Illegal transitions enumerated. Coverage check before freeze. |
+
 ### Closure templates — used per delivery and per project
 
 | File | Stage | Notes |
