@@ -17,9 +17,13 @@ implemented until tests or validation evidence exist.
 
 ## Matrix
 
+The Contract column must cite at least one composite token (`US-NNN.REQ-MMM`,
+`US-NNN.SC-MMM`, or `US-NNN.TC-MMM`) — see `docs/HARNESS.md` § Traceability
+Tokens. Tiny-lane rows may use inline narrative instead.
+
 | Story | Contract | Unit | Integration | E2E | Platform | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TBD | Add rows when story packets are created | no | no | no | no | planned | none |
+| TBD | Add rows when story packets are created. Example: `US-014.REQ-001 — manager updates role for a member` | no | no | no | no | planned | none |
 
 ## Evidence Rules
 

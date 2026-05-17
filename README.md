@@ -33,7 +33,9 @@ a real project supplies one.
 - `docs/ARCHITECTURE.md`: generic architecture discovery and boundary rules.
 - `docs/HARNESS_BACKLOG.md`: proposed harness improvements.
 - `docs/playbooks/`: reusable recipes for recurring tooling, environment, and
-  workflow problems. Read before fighting a familiar symptom.
+  workflow problems. Read before fighting a familiar symptom. Includes
+  patterns for localizing client templates (bilingual delivery) and
+  composing multi-step playbooks.
 - `docs/templates/`: reusable spec-intake, story, decision, and validation
   templates.
 

@@ -107,6 +107,43 @@ docs/decisions/*
 Before implementation, product docs describe intent. After implementation,
 product docs plus executable tests become the living contract.
 
+## Traceability Tokens
+
+The harness uses prefixed IDs so that requirements, scenarios, tests, and
+stories can be cross-referenced by `grep` across `docs/`. Token format follows
+three rules:
+
+1. **Top-level IDs keep their existing form.** Stories use `US-NNN`
+   (e.g. `US-014`), epics use `E0X-kebab-name` (e.g. `E02-access-control`),
+   decisions use `NNNN` 4-digit without prefix (e.g. `0004`). Do not rename
+   them.
+2. **Sub-story IDs use composite form** `US-NNN.PREFIX-MMM` where PREFIX is
+   one of:
+
+   | Prefix | Means | Lives in |
+   | --- | --- | --- |
+   | REQ | A discrete requirement inside a story | story packet |
+   | SC | A scenario / edge case to prove | scenario notes or test plan |
+   | TC | A test case (manual or automated) | TEST_MATRIX row, test file name |
+
+   Example: `US-014.REQ-001`, `US-014.SC-003`, `US-014.TC-007`. Composite
+   scope keeps numbering local to the story (no cross-story counter to
+   manage) and forces `grep` callers to cite the full composite for audit.
+3. **TEST_MATRIX rows cite the token they prove.** Any row in
+   `docs/TEST_MATRIX.md` must reference at least one composite token in its
+   Contract column.
+
+Per-lane application:
+
+| Lane | Token use |
+| --- | --- |
+| Tiny | Optional. Inline narrative is fine. |
+| Normal | Required for any new requirement or scenario the story introduces. |
+| High-risk | Required. Every entry in `execplan.md`, `design.md`, `validation.md` must reference its tokens. |
+
+Reject `STR-` and `DEC-` prefixes — `US-` and 4-digit decision numbering
+already cover those concepts.
+
 ## Spec Lifecycle
 
 Harness v0 starts without a tracked project spec. When the human provides a
