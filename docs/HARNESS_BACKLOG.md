@@ -275,6 +275,77 @@ proposed
 
 ### Title
 
+Extract `/ck:*` recommendations in existing playbooks into clearly-optional Tooling Hints (B6)
+
+### Discovered While
+
+Independence Principle audit 2026-05-17 (decision 0005 closure +
+checking claudekit-custom coupling across all shipped harness surface).
+
+### Current Pain
+
+Five pre-existing playbooks inline `/ck:*` skill recommendations in
+their core logic body, making it ambiguous whether the skill is a
+required tool or optional convenience:
+
+- `headless-browser-blank-screenshot.md` — refs `/ck:agent-browser`,
+  `/ck:chrome-devtools`, `/ck:web-testing`, `/ck:ai-multimodal`.
+- `landing-page-saas-ai-noti-style.md` — refs `/ck:frontend-design`,
+  `/ck:ui-styling`, `/ck:ui-ux-pro-max`, `/ck:web-design-guidelines`.
+- `ui-design-system-contract.md` — refs `/ck:ai-multimodal`,
+  `/ck:stitch`, `/ck:ui-ux-pro-max`, `/ck:design`, `/ck:frontend-design`,
+  `/ck:ui-styling`, `/ck:web-design-guidelines`, and
+  `/ck:ck-extract-design-system` (the only claudekit-custom ref in
+  shipped harness).
+- `e2e-qa-field-by-field-verify-with-report.md` — refs `/ck:web-testing`,
+  `/ck:ai-multimodal`, `/ck:chrome-devtools`.
+- `e2e-recording-user-guide-quality.md` — refs `/ck:web-testing`,
+  `/ck:ai-multimodal`, `/ck:chrome-devtools`, `/ck:test`.
+
+Per `docs/HARNESS.md` § Independence Principle, recommendations are
+allowed but core logic must be tool-independent and recommendations
+must be clearly optional. Current inline placement violates the
+"clearly optional" half of that contract.
+
+### Suggested Improvement
+
+For each affected playbook:
+
+1. Move all `/ck:*` references out of body sections into a `§ Tooling
+   Hints` appendix at the bottom (or extend the existing
+   `§ Related Tools And Skills` section if present).
+2. Tag each hint as "Optional — convenience wrapper" with the fallback:
+   - `/ck:web-testing` → use Playwright directly.
+   - `/ck:ai-multimodal` → call Gemini API or vision model directly.
+   - `/ck:agent-browser` / `/ck:chrome-devtools` → use Puppeteer or
+     Playwright directly.
+   - `/ck:stitch` / `/ck:frontend-design` / `/ck:ui-styling` /
+     `/ck:ui-ux-pro-max` / `/ck:web-design-guidelines` / `/ck:design` →
+     manual design work or the underlying upstream tools.
+   - `/ck:ck-extract-design-system` → manual design token extraction.
+   - `/ck:test` → invoke test framework directly.
+3. Ensure the playbook body reads sensibly without ever mentioning a
+   `/ck:*` skill — the appendix is enrichment, the body is logic.
+
+### Demand Evidence
+
+None — flagged by Independence Principle audit; no project has hit a
+real coupling failure yet. Hold at `proposed` until promotion threshold
+is met (2 distinct projects affected, or 1 project hit 3+ times trying
+to run the playbook without ClaudeKit installed).
+
+### Risk
+
+Tiny. Docs reorg only. No logic change to any playbook.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
 Multi-image / multi-artifact analysis pattern (B5)
 
 ### Discovered While
