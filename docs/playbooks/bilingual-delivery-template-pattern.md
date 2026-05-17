@@ -1,5 +1,7 @@
 # Bilingual Delivery Template Pattern
 
+**Lifecycle:** experimental · **First use:** TBD · **Verified by:** none
+
 How to fork harness templates into a locale variant (e.g. Vietnamese,
 Japanese) without losing portability of the automation, IDs, and cross-team
 references.

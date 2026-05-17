@@ -1,5 +1,7 @@
 # Patch Extension Protocol
 
+**Lifecycle:** experimental · **First use:** TBD · **Verified by:** none
+
 Non-destructive way for an org or project to inject local extensions into the
 harness's playbooks and templates without forking the whole repo.
 

@@ -1,5 +1,7 @@
 # Playbook Composition Pattern
 
+**Lifecycle:** experimental · **First use:** TBD · **Verified by:** none
+
 How to wrap several playbooks into a single meta-playbook when the same
 sequence keeps recurring — and how to recognise when atomic playbooks are
 clearer than composition.
