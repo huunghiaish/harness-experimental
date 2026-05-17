@@ -92,6 +92,12 @@ Re-check these signals when working in the harness:
 When a trigger fires, drop phase files into this directory and mark plan
 status as `in execution`.
 
+## Trigger Evaluations
+
+| Date | Trigger 1 (installer + HARNESS:EXT in target project) | Trigger 2 (high-risk story → production) | Outcome |
+|------|---|---|---|
+| 2026-05-17 | NOT fired. `HARNESS:EXT:START` matches in this repo are documentation examples inside code fences within `docs/playbooks/PATCH-EXTENSION-PROTOCOL.md`. No TARGET project has installed the harness and added real extension blocks yet. | NOT fired. No `execplan.md` / `overview.md` files exist under `docs/stories/`. No story file contains "production", "deploy", "go-live", "ship", or "hypercare". Only story is `US-001-install-harness.md` (harness bootstrap, not product deploy). | Awaiting trigger. No phase drafting or execution performed. |
+
 ## Unresolved Questions
 
 1. When triggered: should phase 4 (installer change) ship alongside phases
