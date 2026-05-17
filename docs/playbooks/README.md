@@ -66,6 +66,7 @@ Run in sequence — second composes on top of first.
 | File | One-line problem |
 |------|------------------|
 | [discovery-interview-playbook.md](discovery-interview-playbook.md) | Turn a new spec, change request, or brownfield mystery into a REQ list + decisions log + open questions list using 5 personas × 3 question modes. Feeds the rest of the discovery → delivery loop. |
+| [scenario-taxonomy-playbook.md](scenario-taxonomy-playbook.md) | Turn a requirement (REQ token) into a 12-dimension edge-case list (SC tokens). Each row becomes a TEST_MATRIX candidate. Required for normal + high-risk lanes. |
 | [e2e-recording-user-guide-quality.md](e2e-recording-user-guide-quality.md) | E2E recording tests PASS green but cannot serve as customer user-guide videos — API mutations bypass UI, subtitles desync from action, no F5 readback verify. |
 | [e2e-qa-field-by-field-verify-with-report.md](e2e-qa-field-by-field-verify-with-report.md) | One-shot `/goal` recipe taking a feature from "smoke spec" to "DONE 100% + tutorial-quality video + zero-incorrect verify report". Auto-spawns dev sub-agent on product bugs, loops until acceptance gate or 3-strikes escalate. |
 | [session-retrospective.md](session-retrospective.md) | Multi-task session is ending — capture cross-task insight (friction, playbook UX, lifecycle promotion candidates, backlog candidates, decisions) before session memory disappears. Triggered by AGENTS.md Task Loop step 9. |
