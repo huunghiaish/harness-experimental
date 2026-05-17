@@ -66,33 +66,41 @@ product validation and harness maintenance expectations.
 
 ## Greenfield Bootstrap (from a SPEC.md)
 
-For a brand-new project starting from a written specification:
+For a brand-new project starting from a written specification, four
+commands take you from empty folder to ready-for-intake:
 
 ```bash
-# 1. Clone the harness skeleton into a fresh directory
-git clone https://github.com/huunghiaish/harness-experimental.git my-project
-cd my-project
-rm -rf .git && git init
+# 1. Empty folder for the new project
+mkdir my-new-project && cd my-new-project
 
-# 2. Place the spec at the canonical greenfield location
+# 2. Install harness into it (one-liner — see "Install Harness Into A Project" below for options)
+curl -fsSL "https://raw.githubusercontent.com/huunghiaish/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
+
+# 3. Place the spec at the canonical greenfield location
 cp /path/to/your-spec.md ./SPEC.md
+
+# 4. Initialize the project's own git history
+git init && git add -A && git commit -m "chore: bootstrap from harness + add SPEC"
 ```
 
-3. Open Claude Code (or any agent that reads `AGENTS.md`) and prompt:
+Then open Claude Code (or any agent that reads `AGENTS.md`) and prompt:
 
-   > Read SPEC.md. Run Phase 1 Spec Intake per docs/FEATURE_INTAKE.md.
-   > Create docs/spec-intake.md. Stop after intake for human review.
+> Read SPEC.md. Run Phase 1 Spec Intake per docs/FEATURE_INTAKE.md.
+> Create docs/spec-intake.md. Stop after intake for human review.
 
-4. Approve the intake (see `docs/FEATURE_INTAKE.md` § Spec Approval
-   Gate). Only then does the agent derive `docs/product/*`, architecture
-   decisions, design-direction decisions, and first story packets.
+Approve the intake (see `docs/FEATURE_INTAKE.md` § Spec Approval Gate).
+Only then does the agent derive `docs/product/*`, architecture
+decisions, design-direction decisions, and first story packets. From
+there, the agent follows the full Task Loop in `AGENTS.md` per story.
 
-5. From there, the agent follows the full Task Loop in `AGENTS.md` per
-   story.
+**Why curl install over `git clone`**: the installer copies only the
+harness skeleton (AGENTS.md + docs/ + scripts/), not this repo's git
+history, plans/, or in-progress work. Cleaner starting point.
 
-The `--bootstrap` mode of `install-harness.sh` is not yet implemented;
-see `docs/HARNESS_BACKLOG.md`. Until then, the manual clone above is
-the supported greenfield path.
+If `curl` is not available or you want full file visibility before
+running, use the manual fallback: clone, delete `.git`, re-init, copy
+SPEC.md, commit. The harness backlog tracks a planned `--bootstrap`
+flag that bundles steps 1+2+4 into one command.
 
 ## Install Harness Into A Project
 

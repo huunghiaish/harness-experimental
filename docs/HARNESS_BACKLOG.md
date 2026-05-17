@@ -39,6 +39,55 @@ proposed | accepted | implemented | rejected
 
 ### Title
 
+Dynamic file discovery for `install-harness.sh`
+
+### Discovered While
+
+Auditing the install script after a user asked which install method to
+prefer for greenfield (2026-05-17). Found three newly-shipped playbooks
+(`e2e-recording-user-guide-quality.md`, `e2e-qa-field-by-field-verify-with-report.md`,
+`ui-design-system-contract.md`) silently absent from the hardcoded
+`HARNESS_FILES` list — anyone who curl-installed after 2026-05-16 was
+missing them. Patched the list immediately, but the root cause is the
+hardcoded approach.
+
+### Current Pain
+
+`scripts/install-harness.sh` ships files via a hardcoded heredoc list
+at lines 357-387. Every new playbook, template, or doc requires manual
+list maintenance. No CI guard detects drift between repo state and
+shipped state. Authors of new files have no signal that their work
+won't reach installer users until someone notices the gap weeks later.
+
+### Suggested Improvement
+
+Pick one of three approaches:
+
+1. **Tarball download** — fetch a tarball of the repo at `main`, extract
+   only the shipped paths (`AGENTS.md`, `docs/`, `scripts/`). Simpler,
+   one network call, naturally picks up new files.
+2. **GitHub API directory listing** — query `/repos/.../contents/docs`
+   recursively, copy matching paths. More requests but no shell-list
+   maintenance.
+3. **Hardcoded list with CI guard** — keep current approach but add a
+   CI step that diffs the heredoc against `git ls-files` filtered to
+   shipped paths and fails on drift.
+
+Option 1 is simplest to implement; option 3 is cheapest to ship today.
+
+### Risk
+
+Normal — install correctness is high-leverage but the fix is contained
+to one script.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
 Bootstrap mode for `install-harness.sh`
 
 ### Discovered While
