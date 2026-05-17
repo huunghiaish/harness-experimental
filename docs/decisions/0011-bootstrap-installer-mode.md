@@ -61,6 +61,25 @@ Tradeoffs:
 - Update `docs/HARNESS_BACKLOG.md` to mark the item `accepted` with reference to this decision (handled in cleanup task Q3 of pre-flight fixes plan).
 - Future enhancement (deferred): `--spec <path>` could be extended to `--inputs <dir>` for multi-file initial drops, but a single starter file is the 80% case.
 
+## Addendum — 2026-05-17 (initial commit on bootstrap)
+
+Demand evidence: same-day friction. After running `--bootstrap`, the user still had to `git add -A && git commit` manually before phase 1 — otherwise the first phase-1 commit (`docs/intake/…`) would silently absorb the entire harness scaffold and discovery spec, polluting the diff that reviewers actually need to read.
+
+Decision extension: when `--bootstrap` runs **and** the installer created `.git` itself (i.e. `.git` did not exist before this invocation), the installer now also stages everything (`git add -A`) and creates an initial commit with message `chore: bootstrap harness scaffold` (or `… + initial discovery spec` when `--spec` was provided).
+
+Skipped cases (no auto-commit):
+
+- `.git` already existed before installer ran → installer leaves git history untouched. The user owns the existing repo's working tree state and is expected to commit on their own cadence.
+- `HEAD` already exists in the newly created repo (e.g. concurrent git activity) → installer skips with a log line, does not overwrite.
+- `--dry-run` → no git operations.
+- `git` not on PATH → already skipped by the prior `git init` guard.
+
+Identity: the commit uses the user's existing global `git config user.email` / `user.name` when present. Only when no identity is configured does the installer fall back to a generic `Harness Bootstrap <harness-bootstrap@local>` author so the commit can be created at all. `--no-verify` and `--no-gpg-sign` are used because a greenfield target has no hooks or signing keys configured yet — the user opts into both on their next normal commit.
+
+Why this matters: phase 1's intake commit should diff cleanly against a baseline that represents *just the harness*. Without the auto-commit, the phase-1 diff balloons by hundreds of files and stops being reviewable. The auto-commit is the minimum git work needed to make phase 1's first deliverable readable.
+
+Cross-reference: `docs/QUICKSTART.md` § 0 (Verify install) — describes the post-bootstrap git state the user should expect. Generalised by `docs/decisions/0012-stage-boundary-commits.md` (this addendum is the case-zero of that broader rule).
+
 ## Cross-Reference
 
 - `docs/HARNESS_BACKLOG.md` — "Bootstrap mode for `install-harness.sh`" original proposal.
@@ -69,3 +88,4 @@ Tradeoffs:
 - `README.md` § Greenfield Bootstrap — updated user-facing path.
 - `docs/FEATURE_INTAKE.md` § Spec Approval Gate — what the "next step" prompt triggers.
 - `plans/reports/review-260517-1728-pre-flight-workflow-audit.md` § C3 — pre-flight audit that surfaced this.
+

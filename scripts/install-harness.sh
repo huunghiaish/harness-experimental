@@ -11,9 +11,10 @@ Options:
   -d, --directory <path>  Target directory. Defaults to the current directory.
   -y, --yes              Accept defaults and skip prompts.
       --bootstrap        Greenfield bootstrap: git init (if needed) + force-copy
-                         all harness files (no merge prompts). Combine with
-                         --spec <path> to place an initial spec into
-                         docs/discovery/.
+                         all harness files (no merge prompts) + initial commit
+                         of the harness scaffold (only when the installer
+                         created .git itself). Combine with --spec <path> to
+                         place an initial spec into docs/discovery/.
       --spec <path>      With --bootstrap, copy the given file into
                          docs/discovery/YYYY-MM-DD-initial-spec.<ext>.
       --merge            On protected-path conflict, keep existing files and
@@ -502,15 +503,17 @@ if [ "$BOOTSTRAP" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
   log ""
   log "Bootstrap mode active."
 
+  GIT_INIT_DONE=0
   if [ ! -d "$TARGET_DIR/.git" ]; then
     if command -v git >/dev/null 2>&1; then
       (cd "$TARGET_DIR" && git init -q)
       log "  git init: initialised empty repo at $TARGET_DIR/.git"
+      GIT_INIT_DONE=1
     else
       log "  git not found — skipping git init (run it manually)"
     fi
   else
-    log "  git init: skipped (.git already exists)"
+    log "  git init: skipped (.git already exists — auto-commit also skipped)"
   fi
 
   if [ -n "$SPEC_PATH" ]; then
@@ -530,6 +533,37 @@ if [ "$BOOTSTRAP" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
     fi
   fi
 
+  if [ "$GIT_INIT_DONE" -eq 1 ]; then
+    if (cd "$TARGET_DIR" && git rev-parse --verify HEAD >/dev/null 2>&1); then
+      log "  initial commit: SKIPPED — HEAD already exists"
+    else
+      commit_msg="chore: bootstrap harness scaffold"
+      if [ -n "$SPEC_PATH" ]; then
+        commit_msg="$commit_msg + initial discovery spec"
+      fi
+      # Fall back to a generic identity only when user has no git config —
+      # avoid clobbering the user's global user.email / user.name.
+      git_identity_args=()
+      if ! (cd "$TARGET_DIR" && git config user.email >/dev/null 2>&1); then
+        git_identity_args+=(-c user.email=harness-bootstrap@local)
+      fi
+      if ! (cd "$TARGET_DIR" && git config user.name >/dev/null 2>&1); then
+        git_identity_args+=(-c user.name='Harness Bootstrap')
+      fi
+      (
+        cd "$TARGET_DIR"
+        git add -A
+        # --no-verify: greenfield target has no hooks yet anyway.
+        # --no-gpg-sign: greenfield target may lack signing config.
+        # ${arr[@]+…} guard: avoids "unbound variable" under set -u when
+        # git_identity_args is empty on bash 3.2 / 4.3 (macOS default bash).
+        git ${git_identity_args[@]+"${git_identity_args[@]}"} \
+            commit -q --no-verify --no-gpg-sign -m "$commit_msg"
+      )
+      log "  initial commit: created — \"$commit_msg\" (clean tree before phase 1)"
+    fi
+  fi
+
   today="$(date +%Y-%m-%d)"
   cat <<NEXT
 
@@ -543,5 +577,10 @@ Next step — paste this prompt into Claude Code (or any AGENTS.md-aware agent):
 After human approval, Phase 2 will derive docs/product/*, the
 stack-selection decision (use docs/templates/decisions/stack-selection.md),
 and the first story packets. See docs/QUICKSTART.md for the first 3 hours.
+
+Note: harness scaffold (+ initial spec, if provided) is already committed.
+The working tree is clean — phase 1 starts on a known baseline. The commit
+uses your global git identity when configured, or a generic "Harness
+Bootstrap" identity as fallback (check with: git log -1 --pretty=fuller).
 NEXT
 fi

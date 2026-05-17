@@ -233,6 +233,27 @@ Independent of stage. Any client request after SOW signing enters the log.
 - Every architecture change has a `docs/decisions/NNNN-*.md`.
 - Every multi-task session (3+ commits OR spans multiple intake items) ends with `session-retrospective.md` → `plans/reports/retro-<date>-<slug>.md`.
 
+### Stage Boundary Commits
+
+Each stage that produces a repo artifact = **1 bundled commit** at the stage boundary, before starting the next stage. Authoritative rule + per-stage commit-message table: `docs/decisions/0012-stage-boundary-commits.md`.
+
+Quick reference:
+
+- Stage 2 → `docs(intake): stage-2 intake brief`
+- Stage 3.A → `docs(intake): stage-3a discovery summary`
+- Stage 3.B → `docs(intake): stage-3b gap analysis + MoSCoW`
+- Stage 5 → `docs(product): stage-5 product contract + stack decision + design guidelines`
+- Stage 6 → `docs(visuals): stage-6 prototype + diagrams + RPM + status flows`
+- Stage 7 → `docs(stories): stage-7 epic EXX + US-NNN..US-MMM`
+- Stage 8 → **multi-commit per `build-execution.md` § Commit Cadence**; closure commit on story exit
+- Stage 10 → `docs(test): stage-10 TEST_MATRIX rows — US-NNN..`
+- Stage 12 → `docs(release): stage-12 release note vX.Y.Z + smoke checklist`
+- Stage 13 → `docs(handover): stage-13 handover docs + maintenance proposal`
+
+Skipped stages per `FEATURE_INTAKE.md` lane → no commit (no artifact). Stages 1, 9, 11 may produce no repo artifact (lead capture, PR comments, external signoff) → no commit needed.
+
+The bootstrap baseline commit (decision 0011 addendum) is the case-zero of this rule — it precedes stage 1 and gives every subsequent stage commit a clean parent diff.
+
 ## Folder Reference
 
 ```text
@@ -345,7 +366,8 @@ Decisions authorising the workflow's shape:
 | 0008 | Stage 6 Visual & Behavioral Modeling insertion |
 | 0009 | Discovery input folder convention (`docs/discovery/` + naming) |
 | 0010 | Stage 3.B Gap Analysis (BA technique) insertion |
-| 0011 | Bootstrap mode for `install-harness.sh` (`--bootstrap` + `--spec`) |
+| 0011 | Bootstrap mode for `install-harness.sh` (`--bootstrap` + `--spec`); addendum: auto-commit harness baseline |
+| 0012 | Stage boundary commits (1 bundled commit per stage; complements stage-8 per-story cadence) |
 
 ## Quick Links
 

@@ -86,8 +86,10 @@ curl -fsSL "https://raw.githubusercontent.com/huunghiaish/harness-experimental/m
 ```
 
 This: creates the target dir, copies the harness, runs `git init`,
-places your spec at `docs/discovery/YYYY-MM-DD-initial-spec.md`, and
-prints the next-step prompt for Claude Code. See
+places your spec at `docs/discovery/YYYY-MM-DD-initial-spec.md`, makes the
+initial commit of the harness scaffold (only when the installer created
+`.git` itself — pre-existing repos are left untouched), and prints the
+next-step prompt for Claude Code. Phase 1 starts on a clean tree. See
 `docs/decisions/0011-bootstrap-installer-mode.md` for details.
 
 ### Multi-file or manual path

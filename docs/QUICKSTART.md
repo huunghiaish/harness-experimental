@@ -6,9 +6,13 @@ You have just installed the harness into a fresh project. Follow this order. Eac
 
 ```bash
 ls AGENTS.md docs/ scripts/install-harness.sh
+git log --oneline -1   # if bootstrap installed: should show the harness scaffold commit
+git status             # should be clean
 ```
 
-All three exist → good. Otherwise re-run the installer (see project root `README.md`).
+All three paths exist → good. If you used `install-harness.sh --bootstrap`, the installer also ran `git init` and made the initial commit so phase 1 starts on a clean tree. If `git status` is dirty before phase 1 starts, commit (or stash) those changes first — phase 1 outputs (`docs/intake/…`) should land as their own commit, not mixed with leftover bootstrap deltas.
+
+Otherwise re-run the installer (see project root `README.md`).
 
 ## 1. Drop raw inputs into `docs/discovery/`
 
@@ -72,6 +76,8 @@ Before writing code:
 - `validate:quick` script runs successfully (per `docs/playbooks/build-execution.md`).
 
 Then: pick the lowest-ID story in `docs/stories/backlog.md`, follow `docs/playbooks/build-execution.md` for commit hygiene. Every commit body cites at least one `US-NNN.REQ-MMM` / `US-NNN.SC-MMM` token.
+
+**Stage boundary commits:** every prior step (intake → discovery → spec → stories) also ends with one bundled commit at the stage boundary — see `docs/WORKFLOW.md` § Stage Boundary Commits and decision `0012-stage-boundary-commits.md`. The bootstrap commit is the baseline; each stage's commit is one row in the `git log` timeline.
 
 ## 7. End of session — capture
 
