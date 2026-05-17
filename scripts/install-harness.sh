@@ -364,6 +364,7 @@ docs/HARNESS.md
 docs/HARNESS_BACKLOG.md
 docs/README.md
 docs/TEST_MATRIX.md
+docs/WORKFLOW.md
 docs/decisions/0001-harness-first-development.md
 docs/decisions/0002-post-spec-product-lifecycle.md
 docs/decisions/0003-generic-spec-intake-harness.md

@@ -22,6 +22,9 @@ Read in this order:
 9. `docs/decisions/` for why important choices were made.
 10. `docs/playbooks/` for reusable recipes that fix recurring tooling or
     environment problems across projects.
+11. `docs/WORKFLOW.md` for the 13-stage solo-dev paid-client delivery
+    map — playbook / template / decision / gate per stage, plus
+    folder, token chain, and per-tier matrix.
 
 This harness does not ship with a project-specific `SPEC.md`. When the human
 provides a spec for a new project, treat that spec as input material for the
