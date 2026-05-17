@@ -38,6 +38,15 @@ Composed by `docs/playbooks/visual-and-behavioral-modeling.md`. Both have `local
 | [delivery-closure-story/](delivery-closure-story/) | Per release / UAT | `overview`, `01-uat-plan`, `02-signoff`, `03-client-update`. VN fork available. |
 | [project-closure-story/](project-closure-story/) | End-of-project handover | `overview`, `01-handover-docs`, `02-credentials-handover`, `03-knowledge-transfer`. VN fork available (handover-docs only — others stay neutral). |
 
+### Project docs — derived per project after stack selection
+
+Stubs the project fills in. Land at `docs/<name>.md` (project root of `docs/`), not in `docs/templates/`. Cited from `docs/HARNESS.md § Project Doc Mapping`.
+
+| File | Stage | Notes |
+| --- | --- | --- |
+| [code-standards.md](code-standards.md) | Stage 5 | One-page conventions doc keyed to the stack-selection decision. Populates `docs/code-standards.md`. |
+| [deployment-guide.md](deployment-guide.md) | Stage 12 (first release) | Environments + env vars + build + deploy + rollback + monitoring + runbook. Populates `docs/deployment-guide.md`. |
+
 ### Commercial templates — solo-dev paid-client delivery
 
 Composed by `docs/playbooks/solo-dev-client-delivery.md`. All have `locale-vi/` forks.

@@ -262,6 +262,23 @@ When an agent is confused, repeats manual reasoning, needs a new validation
 command, discovers a missing rule, or sees a recurring failure pattern, it must
 either improve the harness directly or add a proposal to `HARNESS_BACKLOG.md`.
 
+## Project Doc Mapping
+
+Some agent-orchestration setups (e.g. user-level `~/.claude/CLAUDE.md`) expect a fixed set of project docs at the root of `docs/`. Harness organises the same information differently. The table below maps the expected docs to the harness-equivalent source(s). Agents working under both rules should follow the harness layout — the mapped harness docs ARE the project doc.
+
+| Expected doc | Harness equivalent | Notes |
+| --- | --- | --- |
+| `docs/project-overview-pdr.md` | `docs/HARNESS.md` + `docs/product/*` | Operating model + current product contract together replace a PDR. |
+| `docs/system-architecture.md` | `docs/ARCHITECTURE.md` + `docs/decisions/*` | Generic boundary rules + dated architecture decisions. |
+| `docs/project-roadmap.md` | `docs/stories/backlog.md` (ordering) + epics in `docs/stories/epics/` | Roadmap = ordered story queue. |
+| `docs/project-changelog.md` | `git log` + `docs/decisions/*` | Reconstruct from commit history and dated decisions. Generate on demand. |
+| `docs/codebase-summary.md` | Generated on demand (e.g. `/ck:docs` skill) | Skip until an agent asks; treat as derived, not durable. |
+| `docs/design-guidelines.md` | `docs/design-guidelines.md` (derived at stage 5 via `ui-design-system-contract.md` playbook) | Same name — already a first-class harness artifact for UI projects. |
+| `docs/code-standards.md` | `docs/code-standards.md` (derived at stage 5 from `docs/templates/code-standards.md` after stack-selection decision) | Stub ships in templates; project fills in after stack picked. |
+| `docs/deployment-guide.md` | `docs/deployment-guide.md` (derived at stage 12 from `docs/templates/deployment-guide.md` at first release) | Stub ships in templates; project fills in when first deploy happens. |
+
+When in doubt: the harness layout wins. If a tool or rule demands one of the expected paths and the harness equivalent is enough, create a single-line redirect file rather than duplicating content.
+
 ## Future Validation Ladder
 
 No validation scripts exist yet. When implementation begins, the expected ladder
