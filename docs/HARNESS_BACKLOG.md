@@ -24,6 +24,11 @@ What was hard, repeated, ambiguous, or unsafe?
 
 What should be added or changed?
 
+### Demand Evidence
+
+Projects, dates, or recurrences that justify (or do not yet justify)
+promotion. Update each time a new hit is observed.
+
 ### Risk
 
 Tiny, normal, or high-risk.
@@ -32,6 +37,34 @@ Tiny, normal, or high-risk.
 
 proposed | accepted | implemented | rejected
 ```
+
+## Promotion Rule
+
+Codified by `docs/decisions/0005-roadmap-execution-direction.md` § 5.
+
+A `proposed` item promotes to a decision (and optionally a plan) when
+EITHER:
+
+- **Cross-project signal:** 2 distinct projects independently ask for the
+  same capability. The portability mandate justifies a portable artifact.
+- **Sustained-pain signal:** 1 project hits the gap 3+ times. Recurrence
+  proves the friction is not a one-off.
+
+Promotion mechanic:
+
+1. Update the item's `Demand Evidence` field with the qualifying hits.
+2. Move status from `proposed` to `accepted`.
+3. Write a decision document (`docs/decisions/NNNN-*.md`) referencing this
+   backlog entry.
+4. If implementation work is non-trivial, also create a plan directory.
+
+Items that sit at `proposed` for 12+ months with no Demand Evidence may
+be marked `rejected` with a one-line rationale.
+
+Related: `docs/HARNESS.md` § Playbook Lifecycle uses the same demand
+threshold (1 successful real use OR 2 partial uses) to promote individual
+playbooks from `experimental` to `verified`. Backlog items become
+playbooks; playbooks then mature through the lifecycle states.
 
 ## Items
 
@@ -116,6 +149,161 @@ Add a `--bootstrap` flag that:
 ### Risk
 
 Normal.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
+Standard file-naming convention for discovery artifacts (B1)
+
+### Discovered While
+
+ClaudeKit Custom scan 2026-05-17 (`plans/reports/xia-260517-1130-claudekit-custom-skill-scan.md`,
+Tier B item ck:intake-file).
+
+### Current Pain
+
+Harness intake currently does not prescribe how raw discovery artifacts
+(meeting notes, BPMNs, screenshots, sample data) should be named or
+filed. ck:intake-file uses `YYYY-MM-DD-{descriptive-kebab-slug}.{ext}`
+inside a fixed `discovery-input/{01-business-context, ...}/` folder
+structure. Adopting that wholesale is too rigid for harness's
+"grows from friction" stance, but the date-prefix file-naming idea is
+portable.
+
+### Suggested Improvement
+
+Add a one-page playbook documenting a recommended file-name convention
+for discovery artifacts (`YYYY-MM-DD-{kebab-slug}.{ext}`) and a default
+folder choice (`docs/discovery/`). Leave folder structure unprescribed;
+agents file by topic when topic clusters emerge.
+
+### Demand Evidence
+
+None — waiting for promotion trigger (2 distinct projects asking for a
+standard naming scheme, or 1 project hit 3+ times).
+
+### Risk
+
+Tiny.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
+Persona discovery process playbook (B2)
+
+### Discovered While
+
+ClaudeKit Custom scan 2026-05-17 (Tier B item ck:persona).
+
+### Current Pain
+
+Harness has no canonical way to capture stakeholder personas before
+story work begins. Plan C discovery interview playbook (when shipped)
+implicitly covers persona discovery via the End User / BA / QA /
+Developer / Operator framework, but a dedicated lightweight persona
+artifact is missing.
+
+### Suggested Improvement
+
+Optional playbook that turns persona discovery into a small structured
+output (1-page persona summary per persona: role, primary motivations,
+failure modes, evidence basis). NOT a full UX research deliverable.
+Re-evaluate after Plan C ships — discovery interview output may already
+cover this and make the playbook redundant.
+
+### Demand Evidence
+
+None. Defer at minimum until Plan C ships and we can see whether the
+discovery interview output is enough.
+
+### Risk
+
+Tiny.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
+Brand-direction discovery process (B3)
+
+### Discovered While
+
+ClaudeKit Custom scan 2026-05-17 (Tier B item ck:brand-guidelines).
+
+### Current Pain
+
+`docs/playbooks/ui-design-system-contract.md` § Style Intake already
+covers the brand-direction discovery surface for UI work, but the
+broader brand voice / tone / copy rules questions for non-UI
+deliverables (client comms, signoff doc tone, hypercare comms) have no
+documented discovery shape.
+
+### Suggested Improvement
+
+Either amend the UI design system contract playbook with a Style Intake
+variant that covers non-UI surfaces, OR ship a separate small playbook
+specifically for comms-tone discovery. Pick after first real project
+exposes which need is sharper.
+
+### Demand Evidence
+
+None.
+
+### Risk
+
+Tiny.
+
+### Status
+
+proposed
+
+## Missing Harness Capability
+
+### Title
+
+Multi-image / multi-artifact analysis pattern (B5)
+
+### Discovered While
+
+ClaudeKit Custom scan 2026-05-17 (Tier B item ck:extract-design-system).
+
+### Current Pain
+
+When a discovery batch ships multiple related artifacts (screenshots of
+existing system, sample data files, BPMN diagrams), there is no
+documented playbook for systematically analysing them as a set rather
+than one-by-one. ck:extract-design-system shows one specialised version
+(reverse-engineer design tokens from screenshots) — the general pattern
+is portable.
+
+### Suggested Improvement
+
+Playbook describing how an agent should analyse a multi-artifact
+discovery batch: inventory the set, classify each artifact, find
+contradictions across artifacts, surface the consolidated finding plus
+the per-artifact notes.
+
+### Demand Evidence
+
+None.
+
+### Risk
+
+Tiny.
 
 ### Status
 
