@@ -67,6 +67,7 @@ Run in sequence — second composes on top of first.
 
 | File | One-line problem |
 |------|------------------|
+| [solo-dev-client-delivery.md](solo-dev-client-delivery.md) | Meta-playbook for solo-dev (or small-team) paid client delivery. Maps a 12-stage commercial flow (lead → intake brief → discovery → SOW → spec intake → story slicing → build → review → QA → UAT → release → handover + maintenance) onto existing harness pieces. Pointers only; composes, does not duplicate. |
 | [discovery-interview-playbook.md](discovery-interview-playbook.md) | Turn a new spec, change request, or brownfield mystery into a REQ list + decisions log + open questions list using 5 personas × 3 question modes. Feeds the rest of the discovery → delivery loop. |
 | [scenario-taxonomy-playbook.md](scenario-taxonomy-playbook.md) | Turn a requirement (REQ token) into a 12-dimension edge-case list (SC tokens). Each row becomes a TEST_MATRIX candidate. Required for normal + high-risk lanes. |
 | [canonical-e2e-flow-playbook.md](canonical-e2e-flow-playbook.md) | Phase-typed E2E test design (form / workflow / readonly / mixed). One journey per file; ≤ 8 assertions. Each test cites its TC token. Consumes seed-data-pattern symbolic IDs. |

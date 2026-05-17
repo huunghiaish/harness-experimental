@@ -106,3 +106,28 @@ inventory.
 - When the first regional fork happens, that team should run this pattern
   and report friction. Append `Variant` sections to this playbook as needed
   (per `docs/playbooks/README.md` variant convention).
+
+## Current Locale Forks In This Harness
+
+The harness ships English defaults plus a `locale-vi/` starter set covering
+the client-facing surface. Internal-facing templates (story, decision,
+spec-intake, high-risk-story, validation-report) stay English-only.
+
+```text
+docs/templates/locale-vi/
+├── client-intake-brief.md            # commercial — pre-discovery
+├── proposal-sow.md                   # commercial — SOW
+├── change-request-log.md             # commercial — CR log
+├── release-note.md                   # commercial — per release
+├── maintenance-proposal.md           # commercial — post-handover SLA
+├── delivery-closure-story/
+│   ├── 01-uat-plan.md                # UAT — client sees TCs
+│   ├── 02-signoff.md                 # client signs here
+│   └── 03-client-update.md           # client-facing message
+└── project-closure-story/
+    └── 01-handover-docs.md           # client reads at handover
+```
+
+`delivery-closure-story/overview.md`, `project-closure-story/overview.md`,
+`02-credentials-handover.md`, and `03-knowledge-transfer.md` stay in
+English — the org-internal portion of closure does not need to localize.

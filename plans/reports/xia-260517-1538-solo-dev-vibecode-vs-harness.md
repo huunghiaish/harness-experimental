@@ -1,0 +1,112 @@
+# Solo-Dev Vibecode Workflow vs Harness — Compare Report
+
+**Source:** `quy-trinh-solo-dev-vibecode-lam-viec-voi-khach-hang.md` (15-stage AI-suggested client delivery flow)
+**Local:** `harness-experimental` v0 (agent operating harness)
+**Mode:** `--compare`
+**Date:** 2026-05-17
+
+## TL;DR
+
+Source = **commercial/client-facing solo-dev SDLC** (Lead → Discovery → SOW → PRD → UX → Tech → Backlog → Build → UAT → Deploy → Handover → Maintenance). Harness = **internal agent operating model** (intake → story → validation → harness delta). 70% complementary, 30% overlap. Harness is *more rigorous* on build/test/review/closure; source is *more complete* on commercial wrapper (proposal, payment milestone, change-request reply, maintenance plan, release note). Recommend adopting **3 templates + 1 playbook + 1 README pointer** — not the full 15-stage flow.
+
+## Verdict on the Source Doc
+
+| Aspect | Assessment |
+|---|---|
+| Suitability for solo-dev | High — captures real commercial concerns (scope creep, payment, UAT, handover) that pure-tech harnesses miss. |
+| Reusability as harness content | Mixed — the *templates* (Proposal/SOW, Maintenance, Release Note, Change Request reply) are portable; the *prompts* are LLM-generation crutches, not artifacts. |
+| Overlap with harness | Build (8), Review (9), QA (10), UAT (11), Handover (13) already covered with stronger discipline. Don't duplicate. |
+| Anti-pattern risk | "Bạn là Senior X" prompt style ≠ a process. Treat the prompts as scaffolding to *produce* the artifact, then keep the artifact, drop the prompt. |
+| Locale | Vietnamese client-facing — fits existing `bilingual-delivery-template-pattern.md`. Don't pre-translate; ship English default, fork to `locale-vi/` if used. |
+
+## Stage-by-Stage Map
+
+Legend: ✅ already covered · 🟨 partial · ❌ missing · ⚠️ harness has stricter version
+
+| # | Source stage | Harness equivalent | Status |
+|---|---|---|---|
+| 1 | Client Intake / Brief | `docs/templates/spec-intake.md` (engineering-flavored) | 🟨 — no "should we accept?" / budget-range / commercial intake one-pager |
+| 2 | Discovery Questions | `docs/playbooks/discovery-interview-playbook.md` (5 personas × 3 modes) | ⚠️ stronger but **agent-facing, not client-friendly**. Gap: non-tech client questionnaire grouped by business/data/payment/admin/integration |
+| 3 | Scope & Proposal / SOW | none | ❌ **biggest gap** — no proposal, milestone payment, change-request policy, out-of-scope, acceptance condition |
+| 4 | PRD-lite | `docs/product/*` (derived per project) + `docs/templates/story.md` | 🟨 — has product contract + per-story AC, but no PRD-lite single-doc shape with MoSCoW + Given/When/Then |
+| 5 | UX Flow / Wireframe text | `docs/playbooks/ui-design-system-contract.md` (tokens + Coverage Matrix) | 🟨 — has visual system, **no screen-by-screen text spec** (sitemap + fields + states + actions per screen) |
+| 6 | Tech Spec-lite | `docs/ARCHITECTURE.md` + decision pattern (`0001-`–`0006-`) | 🟨 — has discovery rules + stack-selection decision, **no single Tech-Spec-lite template** (stack + schema + endpoints + folder + auth + deploy in one doc) |
+| 7 | Backlog (Epic→Story→Task) | `docs/stories/epics/EXX-name/US-NNN-*.md` + `US-NNN.REQ/SC/TC-MMM` tokens | ✅ — stronger (traceability) |
+| 8 | AI Coding Prompt per task | implicit in story.md AC + `AGENTS.md` Task Loop | 🟨 — no canonical "task implementation prompt" with guardrails ("don't change arch / don't delete code / explain changes / handle loading/error/empty") |
+| 9 | Code Review Prompt | `docs/playbooks/code-review-scoring.md` (6-dim rubric, ≥7 gate, 0=auto-block) | ⚠️ stronger — keep harness version |
+| 10 | QA Test Case | `docs/playbooks/scenario-taxonomy-playbook.md` (12 dims) + `canonical-e2e-flow-playbook.md` + `TEST_MATRIX.md` | ⚠️ stronger — keep harness version |
+| 11 | UAT | `docs/templates/delivery-closure-story/01-uat-plan.md` (TC cites SC tokens, ≤40 cases, env table) | ✅ — stronger (token traceability) |
+| 12 | Deployment & Release Note | none | ❌ — no release note, deployment checklist, rollback template, post-deploy smoke checklist |
+| 13 | Handover | `docs/templates/project-closure-story/` (overview + handover-docs + credentials + knowledge-transfer) | ✅ — stronger (credentials access-verified per row, vault-pointer not secrets) |
+| 14 | Change Request | `docs/FEATURE_INTAKE.md` "change request" input type | 🟨 — internal lane exists, **no client-facing CR log + classification (bug/CR/new feature/UX/clarification) + reply-message template + effort estimate** |
+| 15 | Maintenance | none | ❌ — no maintenance proposal, SLA, Basic/Standard/Premium tiers, monthly hours, support process |
+
+## Decision Matrix
+
+| Decision | Source way | Local way | Recommendation |
+|---|---|---|---|
+| Process scope | 15 linear stages | 3 lanes (tiny/normal/high-risk) + intake gate | **Keep harness** — solo-dev still benefits from lane sizing. The 15 stages overweight a normal feature; harness routes by risk. |
+| Spec format | Generated by "Bạn là Senior X" prompts | Derived artifacts (product docs + stories + decisions) | **Keep harness** — prompts produce vibe-output that rots; the harness keeps a living contract. |
+| Traceability | Implicit "P0/P1/P2 + dependency" | `US-NNN.REQ/SC/TC-MMM` tokens + TEST_MATRIX | **Keep harness** — grep-able audit beats priority labels. |
+| Client deliverables | Localized into Vietnamese in body | English default + locale fork pattern | **Keep harness pattern** — don't pre-translate; existing `bilingual-delivery-template-pattern.md` already handles this. |
+| Commercial wrapper | Strong (proposal/SOW/maintenance/change-request reply) | Missing | **Borrow from source** — this is the gold. |
+| Per-task prompt | "Senior Full-stack Developer" rules | Per-story AC + AGENTS.md Task Loop | **Borrow lightly** — codify the *guardrails* (don't delete code, explain changes, handle states) as a story-template addendum, not the persona prompt. |
+| Release artifact | Release note + checklist + rollback | None | **Borrow** — add a release-note template; UAT alone doesn't capture deploy state. |
+| Maintenance phase | Proposal with SLA + tiers + scope | None | **Borrow** — solo-devs without this lose recurring revenue and inherit unbounded support liability. |
+
+## What To Add — "Good Gold" (Prioritized)
+
+### Tier 1 — Add now (high commercial leverage, low harness disruption)
+
+1. **`docs/templates/proposal-sow.md`** (NEW)
+   Single-page client-facing SOW: project summary, MVP scope, in-scope/out-of-scope, deliverables, timeline by milestone, payment schedule, acceptance conditions, change-request policy, risks & assumptions, client responsibilities.
+   *Composes with:* `bilingual-delivery-template-pattern.md` for VN/JP forks. Sits next to `delivery-closure-story/` as a *project-opening* artifact (closure already covers project-end).
+
+2. **`docs/templates/maintenance-proposal.md`** (NEW)
+   Includes: in-scope items, out-of-scope, SLA tiers (Basic/Standard/Premium), monthly support hours, bug-report process, new-feature request process, response-time matrix, escalation contacts.
+   *Why now:* solo-devs without this either over-serve (no revenue) or under-serve (lose client). Commercial harness gap.
+
+3. **`docs/templates/release-note.md`** (NEW)
+   Sections: release summary, new features (cite REQ tokens), bug fixes (cite story IDs), improvements, known issues (link to backlog), deployment checklist, post-deploy smoke checklist, rollback plan, client-update message.
+   *Composes with:* `01-uat-plan.md` (pre-release) and `03-client-update.md` (post-release notification).
+
+### Tier 2 — Add when first solo-dev project lands (proves demand first)
+
+4. **`docs/playbooks/solo-dev-client-delivery.md`** (NEW playbook, workflow recipe group)
+   Meta-playbook that maps the 15-stage flow → existing harness pieces. Tells a solo dev: "for client work, run intake → discovery interview → proposal/SOW → spec-intake → derive product docs → stories → cook → UAT → release-note → handover → maintenance proposal." One page, pointers only. Honors `playbook-composition-pattern.md`.
+   *Why later:* needs one real run to verify the pointer chain.
+
+5. **`docs/templates/change-request-log.md`** (NEW)
+   Client-facing CR log: ID, date, classification (bug/CR/new feature/UX/clarification), in-original-scope (Y/N), effort estimate, status, reply-message draft.
+   *Why:* `FEATURE_INTAKE.md` "change request" input type is internal — clients need a visible log + classification + the reply template.
+
+### Tier 3 — Defer (low ROI vs harness's existing shape)
+
+6. **Client-friendly discovery questionnaire** — `discovery-interview-playbook.md` already covers it via the *BA* and *End User* personas. Reformatting the same questions into client-non-tech language is a *presentation layer* on the existing playbook — handle case-by-case, not a template.
+
+7. **PRD-lite single-doc** — `docs/product/*` + `story.md` already cover this in two files. Forcing them into one fights the source-hierarchy. Skip.
+
+8. **Screen-by-screen UX text spec** — `ui-design-system-contract.md` § Component Coverage Matrix can absorb a screen-list row addition. Don't ship a parallel template; extend the existing one if/when needed.
+
+9. **Tech Spec-lite single-doc** — Better served by `ARCHITECTURE.md` + a stack-selection decision (already required by `AGENTS.md` Task Loop step 6). Skip.
+
+10. **AI Coding Prompt per task** — guardrails ("don't delete code / explain changes / handle loading-error-empty") can be a 4-line addendum to `docs/templates/story.md` under § Implementation Guardrails. Doesn't deserve its own template.
+
+## Risk / Caveats
+
+- **Adoption risk:** adding 3 templates without demand evidence violates the harness's "grows from friction" principle. Mitigation: log all three in `HARNESS_BACKLOG.md` first with `Demand Evidence: 1 — solo-dev workflow audit 2026-05-17`. Promote to live templates on first real solo-dev project use (per `0005-roadmap-execution-direction.md` § 5 promotion rule: 2 distinct projects OR 1 project × 3+ hits).
+- **Locale risk:** the source doc is VN. Don't translate templates by default — ship English, document the VN fork in `bilingual-delivery-template-pattern.md`.
+- **Scope-creep risk:** the source's 15 stages would 3x the harness's intake ceremony if mandated. Mitigation: the solo-dev playbook stays a *pointer document*, not a Task Loop addition.
+- **"Senior X" prompt risk:** the source uses LLM persona prompts as workflow steps. Resist absorbing prompts as harness artifacts — keep harness artifact-driven (the prompt produces the artifact; the artifact stays, the prompt doesn't).
+
+## Recommended Next Step
+
+If you want to proceed: open `docs/HARNESS_BACKLOG.md` and add three entries (proposal/SOW, maintenance proposal, release note) at `proposed` status with this report cited as Demand Evidence row 1. They promote to live templates on first solo-dev project use. This avoids shipping speculative artifacts while reserving the gap.
+
+If you want to be more aggressive: ship Tier 1 directly (3 templates) since the gap is structural (no commercial wrapper exists in harness today), and the templates are small and locale-neutral. Add the meta-playbook (Tier 2) on first use.
+
+## Open Questions
+
+- Is there a real solo-dev client project queued, or is this audit speculative? Demand evidence depends on the answer.
+- Should the proposal/SOW template ship with a payment-milestone *default schedule* (e.g. 30% / 40% / 30%) or stay schedule-agnostic? Defaults bias delivery; absence forces every solo-dev to invent one.
+- Is the harness ever expected to be used WITHOUT a commercial relationship (e.g. internal teams, OSS)? If yes, the commercial wrapper should be **opt-in** (a separate template family), not core. If no, it can sit alongside `delivery-closure-story/`.

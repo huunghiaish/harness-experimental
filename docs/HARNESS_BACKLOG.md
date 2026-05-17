@@ -380,3 +380,58 @@ Tiny.
 
 proposed
 
+## Missing Harness Capability
+
+### Title
+
+Commercial wrapper for solo-dev client delivery (5 templates + meta-playbook)
+
+### Discovered While
+
+Compare-mode audit (`plans/reports/xia-260517-1538-solo-dev-vibecode-vs-harness.md`)
+against an AI-suggested 15-stage solo-dev workflow on 2026-05-17. Confirmed by
+a real VN e-commerce / dashboard project starting the same week that requires
+end-to-end commercial delivery with the harness.
+
+### Current Pain
+
+Harness shipped strong internal-facing artifacts (intake, story templates,
+scenario taxonomy, code-review scoring, closure templates, handover) but had
+no commercial wrapper: no SOW / proposal, no maintenance offer, no
+release-note + deployment-checklist + rollback, no client-facing
+change-request log, no pre-discovery client-intake brief that gates the
+accept / decline decision.
+
+Solo dev running a paid client project end-to-end through the harness would
+have to invent these artifacts under client deadline pressure, with no review
+cycle. Scope-creep risk and payment risk are both bounded by these missing
+templates.
+
+### Suggested Improvement
+
+Ship five new English commercial templates plus one meta-playbook plus a
+`locale-vi/` starter for client-facing surface (existing closure templates
+included). Internal templates stay English-only. Add § Implementation
+Guardrails to `docs/templates/story.md`. New `docs/templates/README.md`
+index. Documented in `docs/decisions/0007-solo-dev-client-delivery-templates.md`.
+
+### Demand Evidence
+
+- 2026-05-17 — `plans/reports/xia-260517-1538-solo-dev-vibecode-vs-harness.md`
+  audit identified the gap.
+- 2026-05-17 — solo-dev VN e-commerce / dashboard project queued, will run
+  through every stage in the next 4-6 weeks. Single project but 12-stage
+  end-to-end exposure — equivalent in spirit to 3+ separate hits per
+  `0005-roadmap-execution-direction.md` § 5 sustained-pain rule.
+
+### Risk
+
+Normal — five templates + one meta-playbook + one decision + index updates.
+Mitigated by: meta-playbook is pointers-only (no duplication), templates
+are shape-only (no project-specific content), VN fork is starter not
+mandate.
+
+### Status
+
+accepted (implemented 2026-05-17 — see `docs/decisions/0007-solo-dev-client-delivery-templates.md`)
+
