@@ -11,7 +11,8 @@ Reusable scaffolds for the artifacts the harness expects. Copy or stub into the 
 | [story.md](story.md) | All implementation lanes | Normal-lane stories. Includes § Implementation Guardrails (scope, architecture, deletion, state handling, validation, commit hygiene). |
 | [high-risk-story/](high-risk-story/) | High-risk lane only | Four-file packet: `overview`, `execplan`, `design`, `validation`. |
 | [spec-intake.md](spec-intake.md) | New-spec input type | Phase 1 of `docs/FEATURE_INTAKE.md` § Spec Approval Gate. |
-| [decision.md](decision.md) | Architectural / contract decisions | Numbered `docs/decisions/NNNN-*.md`. |
+| [decision.md](decision.md) | Architectural / contract decisions | Numbered `docs/decisions/NNNN-*.md`. Generic shape. |
+| [decisions/stack-selection.md](decisions/stack-selection.md) | First decision after stage-5 spec-intake | Specialized stack questions: runtime, framework, DB, providers (auth/payment/AI/email/storage/observability), hosting, tooling. Required for high-risk lane per `docs/ARCHITECTURE.md § Discovery Before Shape`. |
 | [validation-report.md](validation-report.md) | After validation | Evidence + proof status for a story. |
 
 ### Discovery & analysis templates — used at stage 3 of solo-dev-client-delivery
