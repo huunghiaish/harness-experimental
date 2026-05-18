@@ -97,17 +97,55 @@ Audience: ${audience}
 Commit: ${short} — ${subject}
 (no docs/ files in commit to attach)" \
     >/dev/null 2>&1 || true
-  exit 0
-fi
-
-caption="[Stage ${stage}] ${stage_name}
+else
+  caption="[Stage ${stage}] ${stage_name}
 Audience: ${audience}
 Commit: ${short} — ${subject}
 Files: ${#files[@]}"
 
-CLAUDE_PROJECT_DIR="$sess_cwd" "$script" \
-  --caption "$caption" \
-  "${files[@]}" \
-  >/dev/null 2>&1 || true
+  CLAUDE_PROJECT_DIR="$sess_cwd" "$script" \
+    --caption "$caption" \
+    "${files[@]}" \
+    >/dev/null 2>&1 || true
+fi
+
+# Push the next stage's /goal command (per docs/STAGE_GOALS.md) so the human
+# can paste it into the next Claude Code session straight from Telegram.
+goals_file="$sess_cwd/docs/STAGE_GOALS.md"
+[[ -f "$goals_file" ]] || exit 0
+
+next_heading=""
+case "$stage" in
+  2)   next_heading="## Stage 3.A — Discovery interview" ;;
+  3a)  next_heading="## Stage 3.B — Gap analysis" ;;
+  3b)  next_heading="## Stage 4 — Proposal & SOW" ;;
+  4)   next_heading="## Stage 5 — Spec + Design intake (Phase 1)" ;;
+  5)   next_heading="## Stage 6 — Visual & Behavioral Modeling (sub-step A)" ;;
+  6)   next_heading="## Stage 7 — Story slicing" ;;
+  7)   next_heading="## Stage 8 — Build (per story)" ;;
+  10)  next_heading="## Stage 11 — UAT + signoff" ;;
+  11)  next_heading="## Stage 12 — Release + client update" ;;
+  12)  next_heading="## Stage 13 — Handover + maintenance" ;;
+esac
+
+[[ -n "$next_heading" ]] || exit 0
+
+next_goal=$(awk -v h="$next_heading" '
+  $0 == h          { p=1; next }
+  p && /^## /      { exit }
+  p && /^Goal:$/   { g=1; next }
+  g && /^$/        { exit }
+  g                { print }
+' "$goals_file")
+
+if [[ -n "$next_goal" ]]; then
+  label="${next_heading#\#\# }"
+  CLAUDE_PROJECT_DIR="$sess_cwd" "$script" \
+    --message "[Next goal] ${label}
+Paste into Claude Code (v2.1.139+):
+
+/goal ${next_goal}" \
+    >/dev/null 2>&1 || true
+fi
 
 exit 0

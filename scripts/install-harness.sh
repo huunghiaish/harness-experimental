@@ -584,23 +584,25 @@ if [ "$BOOTSTRAP" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
   today="$(date +%Y-%m-%d)"
   cat <<NEXT
 
-Next step — paste this prompt into Claude Code (or any AGENTS.md-aware agent):
+Next step — start Claude Code v2.1.139+ in this directory and paste:
 
-  Read STAGE.md, then all files under docs/discovery/. Default lane is
-  self-review (all 13 stages required) — see docs/FEATURE_INTAKE.md.
-  Run Phase 1 Spec Intake per the Spec Approval Gate. Create
-  docs/intake/${today}-spec-intake.md, then update STAGE.md
-  (mark stage 2 done, set Current = 3.A). Stop after intake for
-  human review.
+  /goal docs/intake/${today}-spec-intake.md exists with the aggregate of docs/discovery/* restated faithfully per docs/templates/spec-intake.md — no derivations yet, open questions and assumptions logged explicitly. STAGE.md updated to mark stage 2 done and set Current=3.A. Emit a MANUAL_CHECKPOINT block per AGENTS.md asking the human for Phase 2 (derive docs/product/*, design-guidelines.md if UI, and the stack-selection decision) approval before continuing. Read STAGE.md, AGENTS.md, docs/FEATURE_INTAKE.md, docs/WORKFLOW.md, and docs/STAGE_GOALS.md first. Default lane is self-review (all 13 stages). Stop after 10 turns.
 
-After human approval, Phase 2 will derive docs/product/*, the
-stack-selection decision (use docs/templates/decisions/stack-selection.md),
-and the first story packets. See docs/QUICKSTART.md for the first 3 hours.
+After Phase 1 lands, the next /goal command for Phase 2 (derive
+product/*, design-guidelines, stack-selection decision) lives under
+docs/STAGE_GOALS.md § Stage 5 — Phase 2. Subsequent stages: see the
+same file. Goals are also pushed to Telegram by the stage-deliver
+hook after each stage-boundary commit (ready to paste into the
+next session).
 
 Note: harness scaffold (+ STAGE.md root tracker + initial spec, if
 provided) is already committed. Run \`cat STAGE.md\` at any time to see
 which stage this repo is at. The commit uses your global git identity
 when configured, or a generic "Harness Bootstrap" identity as fallback
 (check with: git log -1 --pretty=fuller).
+
+Goal templates require Claude Code v2.1.139+. On older versions, paste
+the condition body without the leading \`/goal\` and run as a plain
+prompt — turn limits and MANUAL_CHECKPOINT rules still apply.
 NEXT
 fi
