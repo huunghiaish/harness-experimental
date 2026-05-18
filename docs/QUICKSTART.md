@@ -5,12 +5,13 @@ You have just installed the harness into a fresh project. Follow this order. Eac
 ## 0. Verify install
 
 ```bash
-ls AGENTS.md docs/ scripts/install-harness.sh
+ls AGENTS.md STAGE.md docs/ scripts/install-harness.sh
+cat STAGE.md           # one-glance view: current stage + history
 git log --oneline -1   # if bootstrap installed: should show the harness scaffold commit
 git status             # should be clean
 ```
 
-All three paths exist → good. If you used `install-harness.sh --bootstrap`, the installer also ran `git init` and made the initial commit so phase 1 starts on a clean tree. If `git status` is dirty before phase 1 starts, commit (or stash) those changes first — phase 1 outputs (`docs/intake/…`) should land as their own commit, not mixed with leftover bootstrap deltas.
+All four paths exist → good. `STAGE.md` is the single-file answer to "which stage is this repo at?" — read it whenever you re-enter a project. If you used `install-harness.sh --bootstrap`, the installer also ran `git init` and made the initial commit so phase 1 starts on a clean tree. If `git status` is dirty before phase 1 starts, commit (or stash) those changes first — phase 1 outputs (`docs/intake/…`) should land as their own commit, not mixed with leftover bootstrap deltas.
 
 Otherwise re-run the installer (see project root `README.md`).
 
@@ -61,11 +62,14 @@ After approval, the agent proceeds to:
 
 | Lane | Next steps |
 | --- | --- |
-| Tiny | Skip to stage 8 (Build). Most stages are noise. |
-| Normal | Walk stages 6 → 10 lightly. RPM + Status Flow optional. |
-| High-Risk | Run all 13 stages. RPM + Status Flow strict per `docs/playbooks/visual-and-behavioral-modeling.md` § C.6. |
+| **Self-Review (default)** | Walk all 13 stages. Human plays the customer at every gate. Depth scales with risk flags but stage coverage does not. Update `STAGE.md` at each stage boundary. |
+| Tiny (opt-out) | Skip to stage 8 (Build). Most stages are noise. |
+| Normal (opt-out) | Walk stages 6 → 10 lightly. RPM + Status Flow optional. |
+| High-Risk (opt-out) | Run all 13 stages. RPM + Status Flow strict per `docs/playbooks/visual-and-behavioral-modeling.md` § C.6. |
 
-For paid client work: read `docs/playbooks/solo-dev-client-delivery.md` end-to-end before starting stage 4 (SOW). For internal / OSS: skip the meta-playbook; go straight from intake to story slicing.
+Default = self-review. Opt into tiny/normal/high-risk only when you've explicitly decided to skip stages — and record that decision in `STAGE.md`.
+
+For paid client work: read `docs/playbooks/solo-dev-client-delivery.md` end-to-end before starting stage 4 (SOW). For internal / OSS / AI-generated personal projects: same 13 stages via self-review; substitute "self" for "client" at stages 2, 4, 11, 12, 13.
 
 ## 6. First story — first commit
 

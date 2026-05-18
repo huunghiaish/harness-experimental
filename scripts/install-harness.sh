@@ -413,6 +413,8 @@ docs/decisions/0008-visual-behavioral-modeling-stage.md
 docs/decisions/0009-discovery-input-folder-convention.md
 docs/decisions/0010-gap-analysis-stage.md
 docs/decisions/0011-bootstrap-installer-mode.md
+docs/decisions/0012-stage-boundary-commits.md
+docs/decisions/0013-self-review-lane-and-stage-tracker.md
 docs/decisions/README.md
 docs/discovery/README.md
 docs/intake/README.md
@@ -446,6 +448,7 @@ docs/stories/epics/README.md
 docs/stories/examples/README.md
 docs/stories/examples/US-001-install-harness.md
 docs/templates/README.md
+docs/templates/STAGE.md
 docs/templates/code-standards.md
 docs/templates/decision.md
 docs/templates/decisions/stack-selection.md
@@ -533,6 +536,20 @@ if [ "$BOOTSTRAP" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
     fi
   fi
 
+  # STAGE.md root tracker — per decision 0013, every project gets one.
+  # Copy template to root if not already present. Bootstrap baseline counts
+  # as "stage 0 — harness installed"; first real stage moves it forward.
+  stage_template="$TARGET_DIR/docs/templates/STAGE.md"
+  stage_root="$TARGET_DIR/STAGE.md"
+  if [ -e "$stage_root" ]; then
+    log "  STAGE.md: SKIPPED — already exists at repo root"
+  elif [ -e "$stage_template" ]; then
+    cp -p "$stage_template" "$stage_root"
+    log "  STAGE.md: copied template to repo root (fill Snapshot before stage 1)"
+  else
+    log "  STAGE.md: SKIPPED — template not found at docs/templates/STAGE.md"
+  fi
+
   if [ "$GIT_INIT_DONE" -eq 1 ]; then
     if (cd "$TARGET_DIR" && git rev-parse --verify HEAD >/dev/null 2>&1); then
       log "  initial commit: SKIPPED — HEAD already exists"
@@ -569,18 +586,21 @@ if [ "$BOOTSTRAP" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
 
 Next step — paste this prompt into Claude Code (or any AGENTS.md-aware agent):
 
-  Read all files under docs/discovery/. Run Phase 1 Spec Intake per
-  docs/FEATURE_INTAKE.md § Spec Approval Gate. Create
-  docs/intake/${today}-spec-intake.md. Stop after intake for
+  Read STAGE.md, then all files under docs/discovery/. Default lane is
+  self-review (all 13 stages required) — see docs/FEATURE_INTAKE.md.
+  Run Phase 1 Spec Intake per the Spec Approval Gate. Create
+  docs/intake/${today}-spec-intake.md, then update STAGE.md
+  (mark stage 2 done, set Current = 3.A). Stop after intake for
   human review.
 
 After human approval, Phase 2 will derive docs/product/*, the
 stack-selection decision (use docs/templates/decisions/stack-selection.md),
 and the first story packets. See docs/QUICKSTART.md for the first 3 hours.
 
-Note: harness scaffold (+ initial spec, if provided) is already committed.
-The working tree is clean — phase 1 starts on a known baseline. The commit
-uses your global git identity when configured, or a generic "Harness
-Bootstrap" identity as fallback (check with: git log -1 --pretty=fuller).
+Note: harness scaffold (+ STAGE.md root tracker + initial spec, if
+provided) is already committed. Run \`cat STAGE.md\` at any time to see
+which stage this repo is at. The commit uses your global git identity
+when configured, or a generic "Harness Bootstrap" identity as fallback
+(check with: git log -1 --pretty=fuller).
 NEXT
 fi

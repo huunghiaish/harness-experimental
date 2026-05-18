@@ -11,20 +11,21 @@ moves the project into implementation.
 
 Read in this order:
 
-1. `README.md` for project status.
-2. `docs/HARNESS.md` for the human-agent operating model.
-3. `docs/FEATURE_INTAKE.md` before turning any prompt into work.
-4. The user-provided spec or prompt, when one exists.
-5. `docs/product/` for current product contracts.
-6. `docs/ARCHITECTURE.md` before proposing implementation shape.
-7. `docs/stories/` for story packets and backlog.
-8. `docs/TEST_MATRIX.md` for proof status.
-9. `docs/decisions/` for why important choices were made.
-10. `docs/playbooks/` for reusable recipes that fix recurring tooling or
+1. `STAGE.md` (repo root) for current WORKFLOW.md stage — answers "where is this repo at?" in one glance before anything else.
+2. `README.md` for project status.
+3. `docs/HARNESS.md` for the human-agent operating model.
+4. `docs/FEATURE_INTAKE.md` before turning any prompt into work.
+5. The user-provided spec or prompt, when one exists.
+6. `docs/product/` for current product contracts.
+7. `docs/ARCHITECTURE.md` before proposing implementation shape.
+8. `docs/stories/` for story packets and backlog.
+9. `docs/TEST_MATRIX.md` for proof status.
+10. `docs/decisions/` for why important choices were made.
+11. `docs/playbooks/` for reusable recipes that fix recurring tooling or
     environment problems across projects.
-11. `docs/WORKFLOW.md` for the 13-stage solo-dev paid-client delivery
-    map — playbook / template / decision / gate per stage, plus
-    folder, token chain, and per-tier matrix.
+12. `docs/WORKFLOW.md` for the 13-stage delivery map — playbook /
+    template / decision / gate per stage, plus folder, token chain, and
+    per-tier matrix.
 
 This harness does not ship with a project-specific `SPEC.md`. When the human
 provides a spec for a new project, treat that spec as input material for the
@@ -36,7 +37,8 @@ then become the living contract that agents should update as the system evolves.
 
 For every task:
 
-1. Classify the request with `docs/FEATURE_INTAKE.md`.
+0. Read `STAGE.md` at repo root. Confirm the task you're about to do matches the Current stage (or is an explicit move into the next stage). If the task spans multiple stages, surface that to the human before proceeding.
+1. Classify the request with `docs/FEATURE_INTAKE.md`. Default lane is `self-review` — all 13 stages required. Only opt into `tiny | normal | high-risk` if the human has explicitly declared the opt-out, and record that in `STAGE.md` Lane Notes.
 2. Identify whether the input is a new spec, spec slice, change request, new
    initiative, maintenance request, or harness improvement.
 3. Locate the affected product docs and story files.
@@ -67,6 +69,11 @@ For every task:
      renamed, or removed.
 8. Work only inside the selected lane: tiny, normal, or high-risk.
 9. Before finishing, ask:
+   - Did a WORKFLOW.md stage complete? If yes, update `STAGE.md` (move the
+     stage row from Pending to History with today's date + commit SHA
+     placeholder, update Snapshot.Current/Last completed/Next gate). The
+     STAGE.md edit MUST land in the same commit as the stage's artifact
+     per `docs/decisions/0012-stage-boundary-commits.md` + `0013`.
    - Did product truth change?
    - Did validation expectations change?
    - Did architecture rules change?
@@ -97,6 +104,7 @@ For every task:
 
 Agents may update directly:
 
+- `STAGE.md` Snapshot / History / Pending rows on stage completion.
 - Story status and evidence.
 - `docs/TEST_MATRIX.md` rows.
 - Links from story packets to product docs.

@@ -6,6 +6,13 @@ stories, or implementation work.
 
 The human does not need to classify risk. The harness does.
 
+**Default lane:** `self-review`. The human plays the role of the customer at
+every stage and uses each artifact as a comprehension/approval gate. All 13
+WORKFLOW.md stages are required — no stage skips. Legacy `tiny | normal |
+high-risk` lanes remain available for teams that explicitly opt out, but the
+self-review lane is what the harness assumes when nothing else is declared.
+See `docs/decisions/0013-self-review-lane-and-stage-tracker.md`.
+
 ## Intake Flow
 
 ```text
@@ -24,7 +31,10 @@ Find affected product docs and stories
 Run risk checklist
     |
     v
-Choose lane: tiny, normal, or high-risk
+Choose lane: self-review (default) | tiny | normal | high-risk
+    |
+    v
+Update STAGE.md current stage row when a stage completes
 ```
 
 ## Input Types
@@ -45,6 +55,31 @@ Do not create or extend a monolithic spec by default after intake. Use product
 docs, stories, decisions, and initiative notes as the living surface.
 
 ## Lanes
+
+### Self-Review (default)
+
+Use whenever the human wants to act as the customer and review every artifact
+the harness produces. This is the default for AI-generated projects where the
+human is the only quality gate.
+
+Requirements:
+
+- **All 13 WORKFLOW.md stages run.** No skipping. The Per-Tier Stage Matrix's
+  "skip" cells do not apply.
+- Stage artifacts are produced for human review even if the artifact is small
+  (e.g. greenfield with no As-Is still gets a one-line gap-analysis note
+  saying so, rather than skipping stage 3.B entirely).
+- Each stage completion updates `STAGE.md` at the repo root and lands a
+  stage-boundary commit per `docs/decisions/0012-stage-boundary-commits.md`.
+- Validation rigor scales with risk-checklist flags below — depth changes,
+  but stage coverage does not.
+
+When NOT to use:
+
+- Mid-flight project that already operates under tiny/normal/high-risk —
+  do not retrofit.
+- The human has explicitly delegated quality to another role (paid QA,
+  external reviewer) and does not need every stage as a comprehension gate.
 
 ### Tiny
 
@@ -102,18 +137,34 @@ Mark one flag for each item that applies:
 
 ## Classification
 
+Self-review is the default — flag count below changes validation *depth* per
+stage, not which stages run. Only opt into tiny/normal/high-risk when a stage
+genuinely does not apply (and document that decision in `STAGE.md`).
+
 ```text
+self-review (default):
+  all 13 stages required; flags below tune depth, not coverage
+
 0-1 flags:
-  tiny or normal, based on code impact
+  light depth — artifacts may be one-paragraph notes
 
 2-3 flags:
-  normal with stronger validation
+  standard depth — full template use, validation expected
 
 4+ flags:
-  high-risk
+  strict depth — high-risk-story packet, 2 reviewers, RPM + Status Flow per entity
 
 Any hard gate:
-  high-risk unless the human explicitly narrows scope
+  strict depth + explicit decision doc, regardless of opt-in lane
+```
+
+Legacy lane mapping (only if the human explicitly opts out of self-review):
+
+```text
+0-1 flags  → tiny or normal
+2-3 flags  → normal with stronger validation
+4+ flags   → high-risk
+hard gate  → high-risk unless human narrows scope
 ```
 
 Hard gates:
@@ -169,9 +220,10 @@ this gate — they're bounded enough to proceed straight to lane work.
 At the end of intake, the agent should be able to say:
 
 ```text
-Lane: normal
-Reason: touches authorization, API contract, and audit behavior.
+Lane: self-review (default)
+Depth: standard (3 risk flags — authorization, API contract, audit).
 Docs: permissions, account-settings, audit-log.
 Story: docs/stories/epics/E02-access-control/US-014-manager-updates-role.md.
 Validation: unit, integration, E2E.
+Next stage: 6 — Visual & Behavioral Modeling (update STAGE.md on completion).
 ```

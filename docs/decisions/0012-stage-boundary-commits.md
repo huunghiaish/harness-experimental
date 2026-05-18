@@ -42,7 +42,9 @@ Per-stage suggested form (non-exhaustive — adapt scope per project):
 | 12 Release + client update | `docs(release): stage-12 release note vX.Y.Z + smoke checklist` |
 | 13 Handover + maintenance | `docs(handover): stage-13 handover docs + maintenance proposal` |
 
-**Skipped stages:** if a stage skips per `docs/FEATURE_INTAKE.md` lane (e.g. tiny lane skips stages 3.B, 6), no commit fires for that stage — there's no artifact to commit.
+**Skipped stages:** if a stage skips per `docs/FEATURE_INTAKE.md` lane (legacy tiny/normal opt-out only — `self-review` default never skips), no commit fires for that stage — there's no artifact to commit. The skip itself should still be noted in `STAGE.md` History as "skipped (lane = tiny)".
+
+**STAGE.md update is part of every stage commit.** Per `docs/decisions/0013-self-review-lane-and-stage-tracker.md`, the stage boundary commit MUST include the STAGE.md edit (Snapshot + History row). Drift between STAGE.md and `git log --grep "stage-"` silently invalidates the project state view.
 
 **Token citation:** stages 1-5 generally pre-date story tokens (`US-NNN.REQ-MMM`) — no token required in those commits. Stages 6+ should cite tokens when applicable (per `build-execution.md`). The token-citation `commit-msg` hook is installed at stage 8 startup, so earlier stages naturally bypass it.
 
@@ -81,3 +83,4 @@ Tradeoffs:
 - `docs/decisions/0011-bootstrap-installer-mode.md` § Addendum — bootstrap baseline commit, the case-zero of this rule.
 - `docs/playbooks/build-execution.md` § Commit Cadence — stage 8 per-story cadence, complements this rule.
 - `docs/playbooks/build-execution.md` § Token-Citation Hook — applies to stages 8+; stages 1-5 commits pre-date the hook install.
+- `docs/decisions/0013-self-review-lane-and-stage-tracker.md` — STAGE.md state tracker; this rule's commit MUST include the STAGE.md edit.

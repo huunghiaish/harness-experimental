@@ -4,7 +4,9 @@ Visual map of the 13-stage solo-dev paid-client delivery flow. Each stage shows 
 
 **Authority:** `docs/playbooks/solo-dev-client-delivery.md` is the source of truth. This file is a navigation aid — when they disagree, the meta-playbook wins.
 
-**Scope:** solo-dev paid client work. Internal / OSS / hobby projects skip this flow and use `docs/FEATURE_INTAKE.md` lanes directly.
+**Scope:** all projects by default (self-review lane in `docs/FEATURE_INTAKE.md`) — human plays the customer at every stage. Solo-dev paid client work uses the same 13 stages with extra commercial artifacts (SOW, payment milestones, signoff). Teams that explicitly opt into legacy `tiny | normal | high-risk` lanes follow the Per-Tier Stage Matrix at the bottom of this file; everyone else walks all 13 stages.
+
+**Current stage:** read `STAGE.md` at repo root. Updated at every stage boundary commit per `docs/decisions/0013-self-review-lane-and-stage-tracker.md`.
 
 ## TL;DR Flow
 
@@ -75,9 +77,9 @@ Two sub-steps. 3.A surfaces what the client said; 3.B structures what it means.
 
 **Purpose:** BA 4-step technique. Compare As-Is vs To-Be, structure the gaps, propose solutions with MoSCoW priority. Anchors SOW § 4 in-scope.
 
-**Per-tier:** tiny skip; normal required when client has existing systems; high-risk required + stakeholder validation round.
+**Per-tier:** self-review required (write one-line "greenfield, no As-Is" note if nothing to compare); tiny skip; normal required when client has existing systems; high-risk required + stakeholder validation round.
 
-**Skip when:** greenfield (no As-Is) or pure refactor (technical, document in decision).
+**Greenfield / refactor in self-review:** still produce the artifact — even if the As-Is column is empty, the To-Be + Plan of Action columns force the human to declare what they think they're building before stage 4.
 
 **Reads:** discovery summary + intake brief + raw inputs. **Writes:** `docs/intake/YYYY-MM-DD-gap-analysis.md` with To-Be / As-Is / Gap (6 categories) / Plan of Action (MoSCoW).
 
@@ -122,7 +124,7 @@ Two sub-steps. 3.A surfaces what the client said; 3.B structures what it means.
 - B. Interactive prototype — Claude Design (https://claude.ai/design) primary; Stitch / Artifacts / v0.dev / pencil.dev fallbacks. → `docs/visuals/prototype/`.
 - C. Business diagrams — sitemap, user flow, business workflow, ERD draft, Role-Permission Matrix, Status Flow per stateful entity. → `docs/visuals/diagrams/*`.
 
-**Per-tier:** tiny skip; normal A + sitemap + 1 user flow + 1 prototype screen; high-risk all sub-steps required.
+**Per-tier:** self-review all sub-steps required (the human-as-customer needs the prototype + diagrams to review intent); tiny skip; normal A + sitemap + 1 user flow + 1 prototype screen; high-risk all sub-steps required.
 
 **Hook:** prototype frozen + diagrams frozen + RPM/Status Flow coverage checks before stage 7.
 
@@ -160,7 +162,7 @@ Two sub-steps. 3.A surfaces what the client said; 3.B structures what it means.
 
 **Rubric:** correctness 3 + security 2 + quality 2 + performance 1 + maintainability 1 + tests 1 = 10. Pass ≥ 7. Any dimension = 0 is auto-block.
 
-**Per-tier:** tiny optional; normal 1 reviewer; high-risk 2 reviewers.
+**Per-tier:** self-review required (1 reviewer = the human-as-customer reading the diff against the prototype); tiny optional; normal 1 reviewer; high-risk 2 reviewers.
 
 **Hook:** PR cannot merge if score < 7 OR any dimension = 0.
 
@@ -237,6 +239,8 @@ Independent of stage. Any client request after SOW signing enters the log.
 
 Each stage that produces a repo artifact = **1 bundled commit** at the stage boundary, before starting the next stage. Authoritative rule + per-stage commit-message table: `docs/decisions/0012-stage-boundary-commits.md`.
 
+**Every stage boundary commit MUST also update `STAGE.md` at repo root** (current stage row + History entry with the commit short hash). Authoritative rule: `docs/decisions/0013-self-review-lane-and-stage-tracker.md`. The STAGE.md update lands in the same commit as the stage artifact — never as a separate follow-up.
+
 Quick reference:
 
 - Stage 2 → `docs(intake): stage-2 intake brief`
@@ -250,7 +254,7 @@ Quick reference:
 - Stage 12 → `docs(release): stage-12 release note vX.Y.Z + smoke checklist`
 - Stage 13 → `docs(handover): stage-13 handover docs + maintenance proposal`
 
-Skipped stages per `FEATURE_INTAKE.md` lane → no commit (no artifact). Stages 1, 9, 11 may produce no repo artifact (lead capture, PR comments, external signoff) → no commit needed.
+Skipped stages per `FEATURE_INTAKE.md` lane (legacy tiny/normal opt-out only — self-review never skips) → no commit (no artifact). Stages 1, 9, 11 may produce no repo artifact (lead capture, PR comments, external signoff) → no commit needed, but STAGE.md still gets the History row marked "done (no repo artifact)".
 
 The bootstrap baseline commit (decision 0011 addendum) is the case-zero of this rule — it precedes stage 1 and gives every subsequent stage commit a clean parent diff.
 
@@ -307,24 +311,26 @@ Per-lane application:
 
 ## Per-Tier Stage Matrix
 
-Which stages run for which lane? Tiny / Normal / High-risk per `docs/FEATURE_INTAKE.md`.
+Which stages run for which lane? Self-Review (default) / Tiny / Normal / High-risk per `docs/FEATURE_INTAKE.md`.
 
-| Stage | Tiny | Normal | High-Risk |
-|---|---|---|---|
-| 1 Lead | — | — | — |
-| 2 Intake brief | optional | required | required |
-| 3.A Discovery interview | optional | required | required |
-| 3.B Gap analysis | skip | required if existing systems | required + stakeholder validation |
-| 4 Proposal & SOW | skip if no commercial | required | required |
-| 5 Spec + Design intake | optional | required | required + stack-selection decision |
-| 6 Visual & Behavioral Modeling | skip | partial (sitemap + 1 user flow + 1 prototype screen) | full (all 3 sub-steps + RPM + Status Flow per entity) |
-| 7 Story slicing | story.md | story.md + scenario-taxonomy | high-risk-story/ packet + full scenario-taxonomy |
-| 8 Build | inline narrative | full guardrails | full guardrails + decision required for arch change |
-| 9 Code review | optional | 1 reviewer | 2 reviewers |
-| 10 QA + scenarios | inline | TEST_MATRIX rows required | TEST_MATRIX + canonical-e2e-flow |
-| 11 UAT + signoff | optional | required | required + visual conformance gate |
-| 12 Release + client update | release note optional | release note + smoke required | release note + smoke + rollback test |
-| 13 Handover + maintenance | minimal | full handover | full handover + maintenance proposal |
+**Self-Review = default.** All 13 stages run; depth scales with risk flags. Legacy lanes shown for explicit opt-out only.
+
+| Stage | Self-Review (default) | Tiny | Normal | High-Risk |
+|---|---|---|---|---|
+| 1 Lead | required (1-line capture, even for self-initiated work) | — | — | — |
+| 2 Intake brief | required (vendor=you, client=you) | optional | required | required |
+| 3.A Discovery interview | required (run on yourself; surfaces unstated assumptions) | optional | required | required |
+| 3.B Gap analysis | required (greenfield → As-Is empty + To-Be filled) | skip | required if existing systems | required + stakeholder validation |
+| 4 Proposal & SOW | required (self-SOW: scope + deadlines + done-when, no price) | skip if no commercial | required | required |
+| 5 Spec + Design intake | required + stack-selection decision | optional | required | required + stack-selection decision |
+| 6 Visual & Behavioral Modeling | required (all 3 sub-steps; prototype = your acceptance gate) | skip | partial (sitemap + 1 user flow + 1 prototype screen) | full (all 3 sub-steps + RPM + Status Flow per entity) |
+| 7 Story slicing | required (story.md + scenario-taxonomy; high-risk packet when ≥4 flags) | story.md | story.md + scenario-taxonomy | high-risk-story/ packet + full scenario-taxonomy |
+| 8 Build | required (full guardrails) | inline narrative | full guardrails | full guardrails + decision required for arch change |
+| 9 Code review | required (you read the diff against the prototype + spec intake) | optional | 1 reviewer | 2 reviewers |
+| 10 QA + scenarios | required (TEST_MATRIX rows + canonical-e2e for ≥2 flags) | inline | TEST_MATRIX rows required | TEST_MATRIX + canonical-e2e-flow |
+| 11 UAT + signoff | required (self-UAT: walk through each REQ vs running product, signoff in `delivery-closure-story/`) | optional | required | required + visual conformance gate |
+| 12 Release + client update | required (release note + smoke; client = your future self) | release note optional | release note + smoke required | release note + smoke + rollback test |
+| 13 Handover + maintenance | required (handover = transfer to future-you / next agent; credentials checklist + read-this-order) | minimal | full handover | full handover + maintenance proposal |
 
 ## Locale Forks (Vietnamese)
 
@@ -368,6 +374,7 @@ Decisions authorising the workflow's shape:
 | 0010 | Stage 3.B Gap Analysis (BA technique) insertion |
 | 0011 | Bootstrap mode for `install-harness.sh` (`--bootstrap` + `--spec`); addendum: auto-commit harness baseline |
 | 0012 | Stage boundary commits (1 bundled commit per stage; complements stage-8 per-story cadence) |
+| 0013 | Self-review lane (default) + STAGE.md root state tracker |
 
 ## Quick Links
 

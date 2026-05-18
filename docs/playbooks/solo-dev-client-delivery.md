@@ -12,8 +12,9 @@
 
 Skip when:
 
-- The project is internal / OSS / hobby — most commercial wrappers are noise. Use the harness directly from `docs/FEATURE_INTAKE.md`.
 - The project is mid-flight and the team already has a working delivery cadence — do not retrofit ceremony.
+
+**Note on internal / OSS / hobby / AI-generated personal projects:** the default `self-review` lane (per `docs/FEATURE_INTAKE.md`) still requires all 13 stages — the human plays the customer at every gate. Reuse this playbook's stage map; substitute "self" for "client" in stages 2, 4, 11, 12, 13. Commercial artifacts (priced SOW, signed proposal) become lightweight self-SOWs: scope + deadlines + done-when, no price. Per `docs/decisions/0013-self-review-lane-and-stage-tracker.md`.
 
 ## The Flow
 
